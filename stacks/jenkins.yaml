@@ -1,0 +1,114 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+    Tenant:
+        Type: String
+    SgInitIp:
+        Type: String
+    VpcId:
+        Type: AWS::EC2::VPC::Id
+    SubnetId:
+        Type: AWS::EC2::Subnet::Id
+    AmiId:
+        Type: AWS::EC2::Image::Id
+    InstanceType:
+        Type: String
+
+Resources:
+    JenkinsInstanceProfile:
+        Type: "AWS::IAM::InstanceProfile"
+        Properties:
+            InstanceProfileName: !Sub ${Tenant}-jenkins-instance-profile
+            Path: "/"
+            Roles:
+              - !Ref JenkinsRole
+
+    JenkinsRole:
+        Type: 'AWS::IAM::Role'
+        Properties:
+            RoleName: !Sub ${Tenant}-jenkins-trusted-policy
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                  - Effect: Allow
+                Principal:
+                    Service: ec2.amazonaws.com
+                Action: 'sts:AssumeRole'
+            Path: /
+            Tags:
+              - Key: Service
+                Value: IAM
+              - Key: Resource
+                Value: Role
+              - Key: StackName
+                Value: !Ref AWS::StackName
+              - Key: StackId
+                Value: !Ref AWS::StackId
+              - Key: Region
+                Value: !Ref AWS::Region
+              - Key: Tenant
+                Value: !Ref Tenant
+              - Key: Name
+                Value: !Sub ${Tenant}-jenkins-trusted-policy
+            ManagedPolicyArns:
+              - arn:aws:iam::aws:policy/AWSCodeCommitReadOnly
+              - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+
+    JenkinsSecurityGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupName: !Sub ${Tenant}-jenkins-sg
+            GroupDescription: Enable HTTP access via port 80
+            VpcId: !Ref VpcId
+            SecurityGroupIngress:
+              - CidrIp: !Sub ${SgInitIp}/32
+                FromPort: 8080
+                IpProtocol: tcp
+                ToPort: 8080
+            Tags:
+              - Key: Service
+                Value: EC2
+              - Key: Resource
+                Value: SecurityGroup
+              - Key: StackName
+                Value: !Ref AWS::StackName
+              - Key: StackId
+                Value: !Ref AWS::StackId
+              - Key: Region
+                Value: !Ref AWS::Region
+              - Key: Tenant
+                Value: !Ref Tenant
+              - Key: Name
+                Value: !Sub ${Tenant}-jenkins-sg
+
+    JenkinsInstance:
+        Type: AWS::EC2::Instance
+        Properties:
+            InstanceInitiatedShutdownBehavior: "terminate"
+            IamInstanceProfile: !Ref JenkinsInstanceProfile
+            SecurityGroupIds:
+              - !Ref JenkinsSecurityGroup
+            SubnetId: !Ref SubnetId
+            ImageId: !Ref AmiId
+            InstanceType: !Ref InstanceType
+            BlockDeviceMappings:
+              - DeviceName: "/dev/sdm"
+                Ebs:
+                    VolumeType: "io1"
+                    Iops: 200
+                    DeleteOnTermination: true
+                    VolumeSize: 20
+              - DeviceName: "/dev/sdk"
+                NoDevice: {}
+            UserData: !Base64
+                'Fn::Sub': |
+                    #!/bin/bash
+                    sudo dnf install -y https://s3.${AWS::Region}.amazonaws.com/amazon-ssm-${AWS::Region}/latest/linux_amd64/amazon-ssm-agent.rpm
+                    sudo dnf update –y
+                    sudo dnf upgrade -y
+                    sudo dnf install docker -y
+                    sudo service docker start
+                    sudo chkconfig docker on
+                    sudo dnf install -y git
+                    sudo git config --global credential.helper '!aws codecommit credential-helper $@'
+                    sudo git config --global credential.UseHttpPath true

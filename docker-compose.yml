@@ -1,0 +1,16 @@
+version: '3.1'
+
+services:
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: rafaelportomoura/jenkins:lstest
+    container_name: jenkins-tcc
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./jenkins_home:/var/jenkins_home
+    environment:
+      - JENKINS_FIRST_ADMIN_USER=user
+      - JENKINS_FIRST_ADMIN_PASSWORD=pass

@@ -1,0 +1,31 @@
+jenkins:
+    systemMessage: "Jenkins instance using Configuration as Code."
+    securityRealm:
+        local:
+        allowsSignup: true
+        users:
+          - id: ${JENKINS_FIRST_ADMIN_USER}
+            password: ${JENKINS_FIRST_ADMIN_PASSWORD}
+    authorizationStrategy:
+        roleBased:
+            roles:
+                global:
+                  - name: "Admin"
+                    permissions:
+                      - "Overall/Administer"
+                    assignments:
+                      - admin
+                  - name: "Read"
+                    permissions:
+                      - "Overall/Read"
+                    assignments:
+                      - "authenticated"
+                agents:
+                  - name: "BuildAgent"
+                    permissions:
+                      - "Agent/Build"
+                      - "Agent/Configure"
+                    assignments:
+                      - "builders"
+
+

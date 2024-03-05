@@ -1,0 +1,55 @@
+{
+  "cSpell.enabled": true,
+  "cSpell.language": "en,pt-BR",
+  "cSpell.words": [],
+  "editor.formatOnPaste": false,
+  "editor.formatOnType": false,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "never",
+    "source.fixAll.eslint": "never"
+  },
+
+  "files.autoSave": "onFocusChange",
+  "files.exclude": {
+    "**/.git": true
+  },
+  "files.associations": {
+    ".env*": "properties",
+    ".prettierrc": "json"
+  },
+
+  "[json]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "never",
+      "source.fixAll": "never"
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.suggest.insertMode": "replace",
+    "editor.tabSize": 2
+  },
+
+  "[yaml]": {
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.insertSpaces": true,
+    "editor.autoIndent": "advanced",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "never",
+      "source.fixAll": "never"
+    },
+    "editor.defaultFormatter": "kennylong.kubernetes-yaml-formatter",
+    "editor.formatOnSave": true,
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    },
+    "editor.tabSize": 4,
+    "editor.detectIndentation": true,
+    "editor.indentSize": "tabSize"
+  },
+}
