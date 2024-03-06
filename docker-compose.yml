@@ -5,12 +5,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: rafaelportomoura/jenkins:lstest
+    image: rafaelportomoura/jenkins:latest
     container_name: jenkins-tcc
     ports:
       - '8080:8080'
     volumes:
-      - ./jenkins_home:/var/jenkins_home
+      - ./scripts:/var/scripts
+    restart: always
     environment:
-      - JENKINS_FIRST_ADMIN_USER=user
-      - JENKINS_FIRST_ADMIN_PASSWORD=pass
+      - JENKINS_FIRST_ADMIN_PASSWORD

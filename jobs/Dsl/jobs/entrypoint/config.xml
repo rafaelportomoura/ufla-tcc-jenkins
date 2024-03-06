@@ -1,0 +1,165 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>NAME</name>
+          <defaultValue>tcc</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>ENTRYPOINT_PATH</name>
+          <defaultValue>tcc/entrypoint.groovy</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>GIT_REPOSITORY</name>
+          <defaultValue>https://git-codecommit.us-east-2.amazonaws.com/v1/repos/ufla-tcc-pipelines</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>BRANCH</name>
+          <defaultValue>main</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>SCM_CRON</name>
+          <defaultValue>H/30 * * * *</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <javaposse.jobdsl.plugin.ExecuteDslScripts plugin="job-dsl@1.87">
+      <scriptText>def base_folder = &quot;Dsl&quot;
+
+folder(&quot;&quot;&quot;$base_folder&quot;&quot;&quot;) {
+  displayName(base_folder)
+}
+def subFolderName = &quot;${base_folder}/${NAME}&quot;
+
+folder(&quot;&quot;&quot;$subFolderName&quot;&quot;&quot;) {
+  displayName(NAME)
+}
+
+def jobPath = &quot;${subFolderName}/entrypoint&quot;
+
+job(&quot;&quot;&quot;$jobPath&quot;&quot;&quot;) {
+    disabled(false)
+  triggers{
+    scm(SCM_CRON)
+  }
+  scm {
+        git {
+            remote {
+                url(GIT_REPOSITORY)
+            }
+            branch(BRANCH)
+        }
+    }
+  wrappers {
+        preBuildCleanup {
+            includePattern(&apos;**/target/**&apos;)
+            deleteDirectories()
+            cleanupParameter(&apos;CLEANUP&apos;)
+        }
+    }
+  steps {
+    dsl{
+        external(ENTRYPOINT_PATH)
+        removeAction(&apos;DELETE&apos;)
+        removeViewAction(&apos;DELETE&apos;)
+    }
+  }
+  publishers {
+        cleanWs { // Clean after build
+            cleanWhenAborted(true)
+            cleanWhenFailure(true)
+            cleanWhenNotBuilt(false)
+            cleanWhenSuccess(true)
+            cleanWhenUnstable(true)
+            deleteDirs(true)
+            notFailBuild(true)
+            disableDeferredWipeout(true)
+            patterns {
+                pattern {
+                    type(&apos;EXCLUDE&apos;)
+                    pattern(&apos;.propsfile&apos;)
+                }
+                pattern {
+                    type(&apos;INCLUDE&apos;)
+                    pattern(&apos;.gitignore&apos;)
+                }
+            }
+        }
+    }
+}</scriptText>
+      <usingScriptText>true</usingScriptText>
+      <sandbox>false</sandbox>
+      <ignoreExisting>false</ignoreExisting>
+      <ignoreMissingFiles>false</ignoreMissingFiles>
+      <failOnMissingPlugin>false</failOnMissingPlugin>
+      <failOnSeedCollision>false</failOnSeedCollision>
+      <unstableOnDeprecation>false</unstableOnDeprecation>
+      <removedJobAction>DELETE</removedJobAction>
+      <removedViewAction>DELETE</removedViewAction>
+      <removedConfigFilesAction>DELETE</removedConfigFilesAction>
+      <lookupStrategy>JENKINS_ROOT</lookupStrategy>
+    </javaposse.jobdsl.plugin.ExecuteDslScripts>
+  </builders>
+  <publishers>
+    <hudson.plugins.ws__cleanup.WsCleanup plugin="ws-cleanup@0.45">
+      <patterns>
+        <hudson.plugins.ws__cleanup.Pattern>
+          <pattern>.propsfile</pattern>
+          <type>EXCLUDE</type>
+        </hudson.plugins.ws__cleanup.Pattern>
+        <hudson.plugins.ws__cleanup.Pattern>
+          <pattern>.gitignore</pattern>
+          <type>INCLUDE</type>
+        </hudson.plugins.ws__cleanup.Pattern>
+      </patterns>
+      <deleteDirs>false</deleteDirs>
+      <skipWhenFailed>false</skipWhenFailed>
+      <cleanWhenSuccess>true</cleanWhenSuccess>
+      <cleanWhenUnstable>true</cleanWhenUnstable>
+      <cleanWhenFailure>true</cleanWhenFailure>
+      <cleanWhenNotBuilt>true</cleanWhenNotBuilt>
+      <cleanWhenAborted>true</cleanWhenAborted>
+      <notFailBuild>false</notFailBuild>
+      <cleanupMatrixParent>false</cleanupMatrixParent>
+      <externalDelete></externalDelete>
+      <disableDeferredWipeout>false</disableDeferredWipeout>
+    </hudson.plugins.ws__cleanup.WsCleanup>
+  </publishers>
+  <buildWrappers>
+    <hudson.plugins.ws__cleanup.PreBuildCleanup plugin="ws-cleanup@0.45">
+      <patterns>
+        <hudson.plugins.ws__cleanup.Pattern>
+          <pattern>.propsfile</pattern>
+          <type>EXCLUDE</type>
+        </hudson.plugins.ws__cleanup.Pattern>
+        <hudson.plugins.ws__cleanup.Pattern>
+          <pattern>.gitignore</pattern>
+          <type>INCLUDE</type>
+        </hudson.plugins.ws__cleanup.Pattern>
+      </patterns>
+      <deleteDirs>false</deleteDirs>
+      <cleanupParameter></cleanupParameter>
+      <externalDelete></externalDelete>
+      <disableDeferredWipeout>false</disableDeferredWipeout>
+    </hudson.plugins.ws__cleanup.PreBuildCleanup>
+  </buildWrappers>
+</project>

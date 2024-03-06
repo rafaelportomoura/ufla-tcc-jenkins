@@ -29,23 +29,26 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/aws
 # Limpeza
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY config/jcasc.yaml /var/jenkins_home/jcasc.yaml
-COPY config/plugins.txt /var/jenkins_home/plugins.txt
+COPY config/jcasc.yaml /jenkins/casc_configs/jcasc.yaml
+COPY config/plugins.txt /usr/share/jenkins/ref/plugins.txt
 
 USER jenkins
 # Stage Final
 FROM jenkins/jenkins:2.447-jdk21
-COPY --from=builder --chown=jenkins:jenkins /var/jenkins_home /var/jenkins_home
-COPY --from=builder --chown=jenkins:jenkins /root/.nvm /root/.nvm
+USER jenkins
+COPY --from=builder --chown=jenkins:jenkins /jenkins/casc_configs/jcasc.yaml /jenkins/casc_configs/jcasc.yaml
+COPY --from=builder --chown=jenkins:jenkins /usr/share/jenkins/ref/plugins.txt /usr/share/jenkins/ref/plugins.txt
+COPY --from=builder --chown=jenkins:jenkins /root/.nvm /home/jenkins/.nvm
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /usr/local/aws-cli /usr/local/aws-cli
 
-RUN chown -R jenkins:jenkins /var/jenkins_home && chmod -R 777 /var/jenkins_home
+USER root
+RUN chown jenkins:jenkins -R /var/jenkins_home && chmod -R 777 /var/jenkins_home
 
 USER jenkins
-ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
-ENV CASC_JENKINS_CONFIG /var/jenkins_home/jcasc.yaml
-RUN jenkins-plugin-cli -f /var/jenkins_home/plugins.txt
+ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/jenkins/casc_configs
+RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
+
 
 ENV PATH="/usr/local/aws-cli/v2/current/bin:${PATH}"
 

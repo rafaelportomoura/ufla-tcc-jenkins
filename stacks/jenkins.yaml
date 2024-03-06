@@ -13,6 +13,16 @@ Parameters:
         Type: AWS::EC2::Image::Id
     InstanceType:
         Type: String
+    GitRepositoryName:
+        Type: String
+    GitRepositoryCloneUrl:
+        Type: String
+    GitRepositoryBranch:
+        Type: String
+        Default: main
+    ContainerName:
+        Type: String
+        Default: rafaelportomoura/jenkins:latest
 
 Resources:
     JenkinsInstanceProfile:
@@ -81,6 +91,8 @@ Resources:
               - Key: Name
                 Value: !Sub ${Tenant}-jenkins-sg
 
+
+
     JenkinsInstance:
         Type: AWS::EC2::Instance
         Properties:
@@ -100,15 +112,86 @@ Resources:
                     VolumeSize: 20
               - DeviceName: "/dev/sdk"
                 NoDevice: {}
-            UserData: !Base64
-                'Fn::Sub': |
+            SsmAssociations:
+              - DocumentName: !Ref Document
+            UserData:
+                Fn::Base64: !Sub |
                     #!/bin/bash
                     sudo dnf install -y https://s3.${AWS::Region}.amazonaws.com/amazon-ssm-${AWS::Region}/latest/linux_amd64/amazon-ssm-agent.rpm
                     sudo dnf update –y
                     sudo dnf upgrade -y
-                    sudo dnf install docker -y
+                    sudo dnf install docker git -y
                     sudo service docker start
+                    sudo usermod -a -G docker ssm-user
                     sudo chkconfig docker on
-                    sudo dnf install -y git
-                    sudo git config --global credential.helper '!aws codecommit credential-helper $@'
-                    sudo git config --global credential.UseHttpPath true
+                    sudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+                    sudo chmod +x /usr/local/bin/docker-compose
+                    sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+                    echo "fim do script" > /var/chegou_ao_fim.txt
+
+    Document:
+        Type: AWS::SSM::Document
+        Properties:
+            Name: !Sub ${Tenant}-jenkins-instance
+            TargetType: /AWS::EC2::Instance
+            DocumentType: Command
+            Content:
+                schemaVersion: "2.2"
+                description: SSM document content with deployment processes
+                parameters:
+                    RepositoryPathOnEC2:
+                        type: String
+                        default: !Sub /home/ssm-user/${GitRepositoryName}
+                    RepositoryCloneUrl:
+                        type: String
+                        default: !Ref GitRepositoryCloneUrl
+                    RepositoryMainBranch:
+                        type: String
+                        default: !Ref GitRepositoryBranch
+                    ContainerName:
+                        type: String
+                        default: !Ref ContainerName
+                mainSteps:
+                  - action: aws:runShellScript
+                    name: gitConfiguration
+                    inputs:
+                        runCommand:
+                          - git config --system credential.helper "!aws codecommit credential-helper $@"
+                          - git config --system credential.UseHttpPath true
+                          - !Sub git config --system user.email "jenkins@${Tenant}.com"
+                          - !Sub git config --system user.name "${Tenant}-jenkins-instance"
+
+                  - action: aws:runShellScript
+                    name: cloneGitRepository
+                    inputs:
+                        runCommand:
+                          - "git clone {{ RepositoryUrl }}  {{ RepositoryPathOnEC2 }}"
+
+                  - action: aws:runShellScript
+                    name: updatesGitRepository
+                    inputs:
+                        runCommand:
+                          - "cd {{ RepositoryPathOnEC2 }}"
+                          - git pull origin {{ RepositoryMainBranch }}
+
+                  - action: aws:runShellScript
+                    name: upContainer
+                    inputs:
+                        runCommand:
+                          - "cd {{ RepositoryPathOnEC2 }}"
+                          - docker-compose up -d --build
+            Tags:
+              - Key: Service
+                Value: EC2
+              - Key: Resource
+                Value: SecurityGroup
+              - Key: StackName
+                Value: !Ref AWS::StackName
+              - Key: StackId
+                Value: !Ref AWS::StackId
+              - Key: Region
+                Value: !Ref AWS::Region
+              - Key: Tenant
+                Value: !Ref Tenant
+              - Key: Name
+                Value: !Sub ${Tenant}-jenkins-sg
