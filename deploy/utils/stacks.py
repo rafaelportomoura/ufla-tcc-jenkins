@@ -30,3 +30,26 @@ class Stack:
             return self.parameters
         else:
             raise KeyError(f"Key {key} not found")
+
+
+def jenkins(
+    tenant: str,
+    vpc: str,
+    subnet: str,
+    amiid: str = "",
+    instance_type: str = "",
+) -> Stack:
+    return Stack(
+        "jenkins.yml",
+        Stack.stack_name(tenant, "jenkins"),
+        {
+            "VPC": vpc,
+            "Subnet": subnet,
+            "AmiId": amiid,
+            "InstanceType": instance_type,
+        },
+    )
+
+
+def jenkins_stack_name(tenant: str, stage: str = None) -> str:
+    return Stack.stack_name(tenant, "jenkins", stage)

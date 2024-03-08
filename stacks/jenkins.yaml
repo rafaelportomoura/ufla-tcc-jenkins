@@ -137,6 +137,9 @@ Resources:
                   - Key: GitUserName
                     Value:
                       - !Ref GitUserName
+                  - Key: Clone
+                    Value:
+                      - True
 
             UserData:
                 Fn::Base64: !Sub |
@@ -175,9 +178,19 @@ Resources:
                         type: String
                     GitUserName:
                         type: String
+                    Clone:
+                        type: String
+                        allowedValues:
+                          - True
+                          - False
+                        default: False
                 mainSteps:
                   - action: aws:runShellScript
                     name: gitConfiguration
+                    precondition:
+                        StringEquals:
+                          - "{{ Clone }}"
+                          - "True"
                     inputs:
                         runCommand:
                           - git config --system credential.helper "!aws codecommit credential-helper $@"
@@ -187,6 +200,10 @@ Resources:
 
                   - action: aws:runShellScript
                     name: cloneGitRepository
+                    precondition:
+                        StringEquals:
+                          - "{{ Clone }}"
+                          - "True"
                     inputs:
                         runCommand:
                           - "git clone {{ RepositoryUrl }}  {{ RepositoryPathOnEC2 }}"
@@ -206,9 +223,9 @@ Resources:
                           - docker-compose up -d --build
             Tags:
               - Key: Service
-                Value: EC2
+                Value: SSM
               - Key: Resource
-                Value: SecurityGroup
+                Value: Document
               - Key: StackName
                 Value: !Ref AWS::StackName
               - Key: StackId
