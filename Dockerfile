@@ -1,5 +1,5 @@
 # Stage de Construção
-FROM jenkins/jenkins:2.447-jdk21 as builder
+FROM jenkins/jenkins:2.448-jdk21 as builder
 
 USER root
 
@@ -29,26 +29,20 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/aws
 # Limpeza
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY config/jcasc.yaml /jenkins/casc_configs/jcasc.yaml
-COPY config/plugins.txt /usr/share/jenkins/ref/plugins.txt
+USER jenkins
+COPY --chown=jenkins:jenkins ./config/plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
 
-USER jenkins
-# Stage Final
-FROM jenkins/jenkins:2.447-jdk21
-USER jenkins
-COPY --from=builder --chown=jenkins:jenkins /jenkins/casc_configs/jcasc.yaml /jenkins/casc_configs/jcasc.yaml
-COPY --from=builder --chown=jenkins:jenkins /usr/share/jenkins/ref/plugins.txt /usr/share/jenkins/ref/plugins.txt
-COPY --from=builder --chown=jenkins:jenkins /root/.nvm /home/jenkins/.nvm
-COPY --from=builder /usr/local/bin /usr/local/bin
-COPY --from=builder /usr/local/aws-cli /usr/local/aws-cli
+COPY --chown=jenkins:jenkins ./config/jcasc.yaml /jenkins/casc_configs/jcasc.yaml
+COPY --chown=jenkins:jenkins scripts/entrypoint.groovy /var/scripts/entrypoint.groovy
 
 USER root
 RUN chown jenkins:jenkins -R /var/jenkins_home && chmod -R 777 /var/jenkins_home
+RUN chmod -R 755 /root/.nvm
+RUN chmod -R 755 /usr/local/aws-cli
 
 USER jenkins
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/jenkins/casc_configs
-RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
-
 
 ENV PATH="/usr/local/aws-cli/v2/current/bin:${PATH}"
 

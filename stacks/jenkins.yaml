@@ -23,6 +23,10 @@ Parameters:
     ContainerName:
         Type: String
         Default: rafaelportomoura/jenkins:latest
+    GitEmail:
+        Type: String
+    GitUserName:
+        Type: String
 
 Resources:
     JenkinsInstanceProfile:
@@ -96,7 +100,7 @@ Resources:
     JenkinsInstance:
         Type: AWS::EC2::Instance
         Properties:
-            InstanceInitiatedShutdownBehavior: "terminate"
+            InstanceInitiatedShutdownBehavior: "stop"
             IamInstanceProfile: !Ref JenkinsInstanceProfile
             SecurityGroupIds:
               - !Ref JenkinsSecurityGroup
@@ -114,6 +118,26 @@ Resources:
                 NoDevice: {}
             SsmAssociations:
               - DocumentName: !Ref Document
+                AssociationParameters:
+                  - Key: RepositoryPathOnEC2
+                    Value:
+                      - !Sub /home/ssm-user/${GitRepositoryName}
+                  - Key: RepositoryCloneUrl
+                    Value:
+                      - !Ref GitRepositoryCloneUrl
+                  - Key: RepositoryMainBranch
+                    Value:
+                      - !Ref GitRepositoryBranch
+                  - Key: ContainerName
+                    Value:
+                      - !Ref ContainerName
+                  - Key: GitEmail
+                    Value:
+                      - !Ref GitEmail
+                  - Key: GitUserName
+                    Value:
+                      - !Ref GitUserName
+
             UserData:
                 Fn::Base64: !Sub |
                     #!/bin/bash
@@ -141,16 +165,16 @@ Resources:
                 parameters:
                     RepositoryPathOnEC2:
                         type: String
-                        default: !Sub /home/ssm-user/${GitRepositoryName}
                     RepositoryCloneUrl:
                         type: String
-                        default: !Ref GitRepositoryCloneUrl
                     RepositoryMainBranch:
                         type: String
-                        default: !Ref GitRepositoryBranch
                     ContainerName:
                         type: String
-                        default: !Ref ContainerName
+                    GitEmail:
+                        type: String
+                    GitUserName:
+                        type: String
                 mainSteps:
                   - action: aws:runShellScript
                     name: gitConfiguration
@@ -158,8 +182,8 @@ Resources:
                         runCommand:
                           - git config --system credential.helper "!aws codecommit credential-helper $@"
                           - git config --system credential.UseHttpPath true
-                          - !Sub git config --system user.email "jenkins@${Tenant}.com"
-                          - !Sub git config --system user.name "${Tenant}-jenkins-instance"
+                          - git config --system user.email "{{ GitEmail }}"
+                          - git config --system user.name "{{ GitUserName }}"
 
                   - action: aws:runShellScript
                     name: cloneGitRepository

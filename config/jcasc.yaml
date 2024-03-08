@@ -3,8 +3,8 @@ jenkins:
         local:
             allowsSignup: false
             users:
-              - id: admin
-                password: password
+              - id: "admin"
+                password: "password"
     authorizationStrategy:
         roleBased:
             roles:
