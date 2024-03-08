@@ -25,3 +25,4 @@ cloudformation.deploy_stack(
         tenant=tenant, vpc=vpc, subnet=subnet, amiid=amiid, instance_type=instance_type
     )
 )
+cloudformation.deploy_stack(stack=stacks.document())

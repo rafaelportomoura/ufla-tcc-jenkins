@@ -2,8 +2,8 @@ import os
 import json
 import time
 from typing import Any
-from scripts.log import Log
-from scripts.stacks import Stack
+from utils.log import Log
+from utils.stacks import Stack
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
@@ -16,7 +16,7 @@ class CloudFormation:
 
     def deploy_stack(self, stack: Stack) -> None:
         template = os.path.join(ROOT, stack["template"])
-        stack_name = stack["stack_name"]
+        stack_name = stack.stack_name()
         parameters = stack["parameters"]
         self.log.checkpoint(f"Deploy of {stack_name}")
         self.deploy(template, stack_name, parameters)
@@ -129,9 +129,14 @@ class CloudFormation:
         cmd += f" --template-file {template}"
         cmd += f" --stack-name {stack_name}"
         if isinstance(parameters, dict) and len(parameters.keys()) > 0:
-            cmd += " --parameter-overrides"
+            params = "--parameter-overrides"
             for key in parameters:
-                cmd += f" '{key}={parameters[key]}'"
+                if parameters[key] == None or parameters[key] == "":
+                    continue
+
+                params += f" '{key}={parameters[key]}'"
+            if params != "--parameter-overrides":
+                cmd += f" {params}"
         return self.__prefix(cmd)
 
     def __describe(self, stack_name) -> str:

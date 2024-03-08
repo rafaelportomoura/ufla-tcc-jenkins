@@ -23,3 +23,4 @@ def remove_from_bucket(bucket: str) -> None:
 
 
 cloudformation.delete_stack(stacks.jenkins_stack_name(tenant=tenant))
+cloudformation.delete_stack(stacks.document_stack_name(tenant=tenant))

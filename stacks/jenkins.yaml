@@ -13,20 +13,6 @@ Parameters:
         Type: AWS::EC2::Image::Id
     InstanceType:
         Type: String
-    GitRepositoryName:
-        Type: String
-    GitRepositoryCloneUrl:
-        Type: String
-    GitRepositoryBranch:
-        Type: String
-        Default: main
-    ContainerName:
-        Type: String
-        Default: rafaelportomoura/jenkins:latest
-    GitEmail:
-        Type: String
-    GitUserName:
-        Type: String
 
 Resources:
     JenkinsInstanceProfile:
@@ -45,9 +31,9 @@ Resources:
                 Version: "2012-10-17"
                 Statement:
                   - Effect: Allow
-                Principal:
-                    Service: ec2.amazonaws.com
-                Action: 'sts:AssumeRole'
+                    Principal:
+                        Service: ec2.amazonaws.com
+                    Action: 'sts:AssumeRole'
             Path: /
             Tags:
               - Key: Service
@@ -116,116 +102,11 @@ Resources:
                     VolumeSize: 20
               - DeviceName: "/dev/sdk"
                 NoDevice: {}
-            SsmAssociations:
-              - DocumentName: !Ref Document
-                AssociationParameters:
-                  - Key: RepositoryPathOnEC2
-                    Value:
-                      - !Sub /home/ssm-user/${GitRepositoryName}
-                  - Key: RepositoryCloneUrl
-                    Value:
-                      - !Ref GitRepositoryCloneUrl
-                  - Key: RepositoryMainBranch
-                    Value:
-                      - !Ref GitRepositoryBranch
-                  - Key: ContainerName
-                    Value:
-                      - !Ref ContainerName
-                  - Key: GitEmail
-                    Value:
-                      - !Ref GitEmail
-                  - Key: GitUserName
-                    Value:
-                      - !Ref GitUserName
-                  - Key: Clone
-                    Value:
-                      - True
-
-            UserData:
-                Fn::Base64: !Sub |
-                    #!/bin/bash
-                    sudo dnf install -y https://s3.${AWS::Region}.amazonaws.com/amazon-ssm-${AWS::Region}/latest/linux_amd64/amazon-ssm-agent.rpm
-                    sudo dnf update –y
-                    sudo dnf upgrade -y
-                    sudo dnf install docker git -y
-                    sudo service docker start
-                    sudo usermod -a -G docker ssm-user
-                    sudo chkconfig docker on
-                    sudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-                    sudo chmod +x /usr/local/bin/docker-compose
-                    sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-                    echo "fim do script" > /var/chegou_ao_fim.txt
-
-    Document:
-        Type: AWS::SSM::Document
-        Properties:
-            Name: !Sub ${Tenant}-jenkins-instance
-            TargetType: /AWS::EC2::Instance
-            DocumentType: Command
-            Content:
-                schemaVersion: "2.2"
-                description: SSM document content with deployment processes
-                parameters:
-                    RepositoryPathOnEC2:
-                        type: String
-                    RepositoryCloneUrl:
-                        type: String
-                    RepositoryMainBranch:
-                        type: String
-                    ContainerName:
-                        type: String
-                    GitEmail:
-                        type: String
-                    GitUserName:
-                        type: String
-                    Clone:
-                        type: String
-                        allowedValues:
-                          - True
-                          - False
-                        default: False
-                mainSteps:
-                  - action: aws:runShellScript
-                    name: gitConfiguration
-                    precondition:
-                        StringEquals:
-                          - "{{ Clone }}"
-                          - "True"
-                    inputs:
-                        runCommand:
-                          - git config --system credential.helper "!aws codecommit credential-helper $@"
-                          - git config --system credential.UseHttpPath true
-                          - git config --system user.email "{{ GitEmail }}"
-                          - git config --system user.name "{{ GitUserName }}"
-
-                  - action: aws:runShellScript
-                    name: cloneGitRepository
-                    precondition:
-                        StringEquals:
-                          - "{{ Clone }}"
-                          - "True"
-                    inputs:
-                        runCommand:
-                          - "git clone {{ RepositoryUrl }}  {{ RepositoryPathOnEC2 }}"
-
-                  - action: aws:runShellScript
-                    name: updatesGitRepository
-                    inputs:
-                        runCommand:
-                          - "cd {{ RepositoryPathOnEC2 }}"
-                          - git pull origin {{ RepositoryMainBranch }}
-
-                  - action: aws:runShellScript
-                    name: upContainer
-                    inputs:
-                        runCommand:
-                          - "cd {{ RepositoryPathOnEC2 }}"
-                          - docker-compose up -d --build
             Tags:
               - Key: Service
-                Value: SSM
+                Value: EC2
               - Key: Resource
-                Value: Document
+                Value: Instance
               - Key: StackName
                 Value: !Ref AWS::StackName
               - Key: StackId
@@ -235,4 +116,17 @@ Resources:
               - Key: Tenant
                 Value: !Ref Tenant
               - Key: Name
-                Value: !Sub ${Tenant}-jenkins-sg
+                Value: !Sub ${Tenant}-jenkins
+            UserData:
+                Fn::Base64: !Sub "#!/bin/bash\nsudo dnf install -y https://s3.${AWS::Region}.amazonaws.com/amazon-ssm-${AWS::Region}/latest/linux_amd64/amazon-ssm-agent.rpm\nsudo dnf update –y\nsudo dnf upgrade -y\nsudo dnf install docker git -y\nsudo service docker start\nsudo usermod -a -G docker ssm-user\nsudo chown \nsudo chkconfig docker on\nsudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose\nsudo chmod +x /usr/local/bin/docker-compose\nsudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose\necho \"fim do script\" > /var/chegou_ao_fim.txt\n    #magic___^_^___line\n"
+Outputs:
+    JenkinsInstance:
+        Description: "Jenkins Instance"
+        Value: !Ref JenkinsInstance
+        Export:
+            Name: !Sub ${Tenant}-jenkins-instance
+    JenkinsUrl:
+        Description: Jenkins Url
+        Value: !Sub http://${JenkinsInstance.PublicDnsName}:8080
+        Export:
+            Name: !Sub ${Tenant}-jenkins-url

@@ -1,22 +1,37 @@
+import os
+
+
+def first_upper(s: str) -> str:
+    return f"{s[0].upper()}{s[1:]}"
+
+
+def stack_name(name: str, tenant: str = None, stage: str = None) -> str:
+    stage = (
+        f"{first_upper(stage)}-" if isinstance(stage, str) and len(stage) > 1 else ""
+    )
+    tenant = (
+        f"{first_upper(tenant)}-" if isinstance(tenant, str) and len(tenant) > 1 else ""
+    )
+    return stage + tenant + f"{first_upper(name)}-Deploy"
+
+
 class Stack:
     def __init__(
         self,
         template: str,
-        stack_name: str,
+        name: str,
         parameters: dict[str, str | int | bool],
+        tenant: str = None,
+        stage: str = None,
     ) -> None:
         self.template = template
-        self.stack_name = stack_name
+        self.name = name
+        self.tenant = tenant
         self.parameters = parameters
+        self.stage = stage
 
-    @staticmethod
-    def stack_name(tenant: str, name: str, stage: str = None) -> str:
-        stage = (
-            f"{stage[0].upper()}{stage[1:]}-"
-            if isinstance(stage, str) and len(stage) > 1
-            else ""
-        )
-        return stage + f"{tenant[0].upper()}{tenant[1:]}-{name}-Deploy"
+    def stack_name(self) -> str:
+        return stack_name(tenant=self.tenant, name=self.name, stage=self.stage)
 
     def __str__(self) -> str:
         return self.stack_name
@@ -40,16 +55,47 @@ def jenkins(
     instance_type: str = "",
 ) -> Stack:
     return Stack(
-        "jenkins.yml",
-        Stack.stack_name(tenant, "jenkins"),
+        os.sep.join(["stacks", "jenkins.yaml"]),
+        "Jenkins",
         {
-            "VPC": vpc,
-            "Subnet": subnet,
+            "VpcId": vpc,
+            "SubnetId": subnet,
             "AmiId": amiid,
             "InstanceType": instance_type,
+            "GitUserName": "jenkins-tcc",
+            "Tenant": tenant,
+            "GitEmail": "jenkins@jenkins.jenkins",
+            "SgInitIp": os.popen("curl ifconfig.me").read(),
         },
+        tenant,
     )
 
 
 def jenkins_stack_name(tenant: str, stage: str = None) -> str:
-    return Stack.stack_name(tenant, "jenkins", stage)
+    return stack_name(tenant=tenant, name="Jenkins", stage=stage)
+
+
+def document(
+    path: str = None,
+    url: str = None,
+    branch: str = None,
+    container: str = None,
+    email: str = None,
+    username: str = None,
+) -> Stack:
+    return Stack(
+        os.sep.join(["stacks", "document.yaml"]),
+        "Document-Run-Container",
+        {
+            "GitRepositoryPath": path,
+            "GitRepositoryCloneUrl": url,
+            "GitRepositoryBranch": branch,
+            "ContainerName": container,
+            "GitEmail": email,
+            "GitUserName": username,
+        },
+    )
+
+
+def document_stack_name() -> str:
+    return stack_name(name="Document-Run-Container")

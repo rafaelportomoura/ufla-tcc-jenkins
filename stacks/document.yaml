@@ -1,0 +1,112 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+    GitRepositoryPath:
+        Type: String
+        Default: /var/repositories/ufla-tcc-jenkins
+    GitRepositoryCloneUrl:
+        Type: String
+        Default: https://git-codecommit.us-east-2.amazonaws.com/v1/repos/ufla-tcc-jenkins
+    GitRepositoryBranch:
+        Type: String
+        Default: main
+    ContainerName:
+        Type: String
+        Default: rafaelportomoura/jenkins:latest
+    GitEmail:
+        Type: String
+        Default: jenkins@jenkins.jenkins
+    GitUserName:
+        Type: String
+        Default: jenkins
+Resources:
+    Document:
+        Type: AWS::SSM::Document
+        Properties:
+            Name: jenkins-document
+            TargetType: /AWS::EC2::Instance
+            DocumentType: Command
+            Content:
+                schemaVersion: "2.2"
+                description: SSM document content with deployment processes
+                parameters:
+                    RepositoryPathOnEC2:
+                        type: String
+                        default: !Ref GitRepositoryPath
+                    RepositoryCloneUrl:
+                        type: String
+                        default: !Ref GitRepositoryCloneUrl
+                    RepositoryMainBranch:
+                        type: String
+                        default: !Ref GitRepositoryBranch
+                    ContainerName:
+                        type: String
+                        default: !Ref ContainerName
+                    GitEmail:
+                        type: String
+                        default: !Ref GitEmail
+                    GitUserName:
+                        type: String
+                        default: !Ref GitUserName
+                    Clone:
+                        type: String
+                        allowedValues:
+                          - "True"
+                          - "False"
+                        default: "False"
+                mainSteps:
+                  - action: aws:runShellScript
+                    name: gitConfiguration
+                    precondition:
+                        StringEquals:
+                          - "{{ Clone }}"
+                          - "True"
+                    inputs:
+                        runCommand:
+                          - git config --system credential.helper "!aws codecommit credential-helper $@"
+                          - git config --system credential.UseHttpPath true
+                          - git config --system user.email "{{ GitEmail }}"
+                          - git config --system user.name "{{ GitUserName }}"
+
+                  - action: aws:runShellScript
+                    name: cloneGitRepository
+                    precondition:
+                        StringEquals:
+                          - "{{ Clone }}"
+                          - "True"
+                    inputs:
+                        runCommand:
+                          - "git clone {{ RepositoryCloneUrl }}  {{ RepositoryPathOnEC2 }}"
+
+                  - action: aws:runShellScript
+                    name: updatesGitRepository
+                    inputs:
+                        runCommand:
+                          - "cd {{ RepositoryPathOnEC2 }}"
+                          - git pull origin {{ RepositoryMainBranch }}
+
+                  - action: aws:runShellScript
+                    name: upContainer
+                    inputs:
+                        runCommand:
+                          - "cd {{ RepositoryPathOnEC2 }}"
+                          - docker-compose up -d --build
+            Tags:
+              - Key: Service
+                Value: SSM
+              - Key: Resource
+                Value: Document
+              - Key: StackName
+                Value: !Ref AWS::StackName
+              - Key: StackId
+                Value: !Ref AWS::StackId
+              - Key: Region
+                Value: !Ref AWS::Region
+              - Key: Name
+                Value: jenkins-instance
+
+Outputs:
+    ContainerDocumentName:
+        Description: The name of the SSM document
+        Value: !Ref Document
+        Export:
+            Name: jenkins-document
