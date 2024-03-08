@@ -71,7 +71,7 @@ def jenkins(
     )
 
 
-def jenkins_stack_name(tenant: str, stage: str = None) -> str:
+def jenkins_stack_name(tenant: str = None, stage: str = None) -> str:
     return stack_name(tenant=tenant, name="Jenkins", stage=stage)
 
 
