@@ -55,7 +55,7 @@ def jenkins(
     instance_type: str = "",
 ) -> Stack:
     return Stack(
-        os.sep.join(["stacks", "jenkins.yaml"]),
+        os.sep.join(["aws", "jenkins.yaml"]),
         "Jenkins",
         {
             "VpcId": vpc,
@@ -84,7 +84,7 @@ def document(
     username: str = None,
 ) -> Stack:
     return Stack(
-        os.sep.join(["stacks", "document.yaml"]),
+        os.sep.join(["aws", "document.yaml"]),
         "Document-Run-Container",
         {
             "GitRepositoryPath": path,
