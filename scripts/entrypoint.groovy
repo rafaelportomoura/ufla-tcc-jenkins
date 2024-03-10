@@ -28,12 +28,18 @@ job("${params['NAME']}/entrypoint") {
             remote {
                 url(params['GIT_REPOSITORY'])
             }
-            branches(params['BRANCH'])
-            scriptPath(params['ENTRYPOINT_PATH'])
+            branch(params['BRANCH'])
         }
     }
     triggers {
         scm(params['SCM_CRON'])
+    }
+    wrappers {
+        preBuildCleanup {
+            includePattern('**/target/**')
+            deleteDirectories()
+            cleanupParameter('CLEANUP')
+        }
     }
     steps {
         dslScript {
@@ -42,11 +48,18 @@ job("${params['NAME']}/entrypoint") {
     }
     publishers {
         wsCleanup {
+            cleanWhenAborted(true)
+            cleanWhenFailure(true)
+            cleanWhenNotBuilt(false)
+            cleanWhenSuccess(true)
+            cleanWhenUnstable(true)
+            deleteDirs(true)
+            notFailBuild(true)
+            disableDeferredWipeout(true)
             patterns {
                 pattern('.propsfile', 'EXCLUDE')
                 pattern('.gitignore', 'INCLUDE')
             }
-            deleteDirs(false)
         }
     }
 }
