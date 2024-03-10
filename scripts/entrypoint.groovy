@@ -49,7 +49,7 @@ job("${params['NAME']}/entrypoint") {
         }
     }
     publishers {
-        wsCleanup {
+        cleanWs {
             cleanWhenAborted(true)
             cleanWhenFailure(true)
             cleanWhenNotBuilt(false)
