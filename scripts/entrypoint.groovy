@@ -42,8 +42,10 @@ job("${params['NAME']}/entrypoint") {
         }
     }
     steps {
-        dslScript {
+        dsl{
             external(params['ENTRYPOINT_PATH'])
+            removeAction('DELETE')
+            removeViewAction('DELETE')
         }
     }
     publishers {
