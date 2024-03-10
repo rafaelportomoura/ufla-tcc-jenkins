@@ -59,8 +59,14 @@ job("${params['NAME']}/entrypoint") {
             notFailBuild(true)
             disableDeferredWipeout(true)
             patterns {
-                pattern('.propsfile', 'EXCLUDE')
-                pattern('.gitignore', 'INCLUDE')
+                pattern {
+                    type('EXCLUDE')
+                    pattern('.propsfile')
+                }
+                pattern {
+                    type('INCLUDE')
+                    pattern('.gitignore')
+                }
             }
         }
     }
