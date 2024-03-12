@@ -1,38 +1,34 @@
-import javaposse.jobdsl.dsl.DslFactory
+folder('env') {
+  displayName('env')
+}
 
-// Define parameters
-def params = [
-    'NAME': 'tcc',
-    'ENTRYPOINT_PATH': 'tcc/entrypoint.groovy',
-    'GIT_REPOSITORY': 'https://git-codecommit.us-east-2.amazonaws.com/v1/repos/ufla-tcc-pipelines',
-    'BRANCH': 'main',
-    'SCM_CRON': 'H/30 * * * *'
-]
+job('env/config') {
+  description ''
+  parameters {
+    string('NodeVersion', 'NodeVersion')
+    string('DefaultPackageManager', 'pnpm')
+  }
+  steps {
+    shell('. \$JENKINS_HOME/.nvm/nvm.sh')
+    shell('nvm install \$NodeVersion')
+    shell('nvm user \$NodeVersion')
+    shell('npm install -g \$DefaultPackageManager')
+  }
+}
 
 // Main job creation block
-folder(params['NAME']) {
-    displayName(params['NAME'])
+folder('Tcc') {
+    displayName('Tcc')
 }
     
-job("${params['NAME']}/entrypoint") {
-    description ''
-    parameters {
-        stringParam('NAME', params['NAME'])
-        stringParam('ENTRYPOINT_PATH', params['ENTRYPOINT_PATH'])
-        stringParam('GIT_REPOSITORY', params['GIT_REPOSITORY'])
-        stringParam('BRANCH', params['BRANCH'])
-        stringParam('SCM_CRON', params['SCM_CRON'])
-    }
+job('Tcc/entrypoint') {
     scm {
         git {
             remote {
-                url(params['GIT_REPOSITORY'])
+                url('https://git-codecommit.us-east-2.amazonaws.com/v1/repos/ufla-tcc-jenkins')
             }
-            branch(params['BRANCH'])
+            branch('main')
         }
-    }
-    triggers {
-        scm(params['SCM_CRON'])
     }
     wrappers {
         preBuildCleanup {
@@ -43,7 +39,7 @@ job("${params['NAME']}/entrypoint") {
     }
     steps {
         dsl{
-            external(params['ENTRYPOINT_PATH'])
+            external('pipelines/tcc/entrypoint.groovy')
             removeAction('DELETE')
             removeViewAction('DELETE')
         }

@@ -1,9 +1,11 @@
 import os
 import sys
 from typing import Any
-from utils.cloudformation import CloudFormation
-from utils.log import Log
-import utils.stacks as stacks
+from aws.deploy.document import document_stack_name
+from aws.deploy.jenkins import jenkins_stack_name
+from scripts.utils.cloudformation import CloudFormation
+from scripts.utils.log import Log
+import scripts.utils.stacks as stacks
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
 
@@ -16,11 +18,5 @@ cloudformation = CloudFormation(profile, region, log_level)
 log = Log(log_level)
 
 
-def remove_from_bucket(bucket: str) -> None:
-    cmd = f"aws --profile {profile} s3 rm s3://{bucket} --recursive"
-    log.cmd(cmd)
-    os.system(cmd)
-
-
-cloudformation.delete_stack(stacks.jenkins_stack_name())
-cloudformation.delete_stack(stacks.document_stack_name())
+cloudformation.delete_stack(jenkins_stack_name(tenant=tenant))
+cloudformation.delete_stack(document_stack_name())

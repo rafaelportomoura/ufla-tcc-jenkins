@@ -1,7 +1,8 @@
 import sys
-import os
-from utils.cloudformation import CloudFormation
-import utils.stacks as stacks
+
+from aws.deploy.document import document
+from aws.deploy.jenkins import jenkins
+from scripts.utils.cloudformation import CloudFormation
 
 
 vpc = sys.argv[1] if len(sys.argv) > 1 else None
@@ -21,8 +22,8 @@ cloudformation = CloudFormation(profile, region, log_level)
 
 
 cloudformation.deploy_stack(
-    stacks.jenkins(
+    stack=jenkins(
         tenant=tenant, vpc=vpc, subnet=subnet, amiid=amiid, instance_type=instance_type
     )
 )
-cloudformation.deploy_stack(stack=stacks.document())
+cloudformation.deploy_stack(stack=document())

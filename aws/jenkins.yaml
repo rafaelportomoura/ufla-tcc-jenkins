@@ -34,6 +34,15 @@ Resources:
                     Principal:
                         Service: ec2.amazonaws.com
                     Action: 'sts:AssumeRole'
+            Policies:
+              - PolicyName: !Sub ${Tenant}-jenkins-S3-policy
+                PolicyDocument:
+                    Version: "2012-10-17"
+                    Statement:
+                      - Effect: Allow
+                        Action:
+                          - s3:PutObject
+                        Resource: !Sub arn:${AWS::Partition}:s3:::*
             Path: /
             Tags:
               - Key: Service
