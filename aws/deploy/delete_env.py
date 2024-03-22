@@ -1,11 +1,16 @@
 import os
 import sys
 from typing import Any
-from aws.deploy.document import document_stack_name
-from aws.deploy.jenkins import jenkins_stack_name
-from scripts.utils.cloudformation import CloudFormation
-from scripts.utils.log import Log
-import scripts.utils.stacks as stacks
+from os.path import abspath, dirname, sep
+
+sys.path.append(sep.join([dirname(dirname(dirname(abspath(__file__)))), "scripts"]))
+
+
+from document import document_stack_name
+from jenkins import jenkins_stack_name
+from utils.cloudformation import CloudFormation
+from utils.log import Log
+import utils.stacks as stacks
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
 

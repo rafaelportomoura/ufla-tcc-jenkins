@@ -1,8 +1,12 @@
 import sys
+from os.path import abspath, dirname, sep
 
-from aws.deploy.document import document
-from aws.deploy.jenkins import jenkins
-from scripts.utils.cloudformation import CloudFormation
+sys.path.append(sep.join([dirname(dirname(dirname(abspath(__file__)))), "scripts"]))
+
+
+from document import document
+from jenkins import jenkins
+from utils.cloudformation import CloudFormation
 
 
 vpc = sys.argv[1] if len(sys.argv) > 1 else None

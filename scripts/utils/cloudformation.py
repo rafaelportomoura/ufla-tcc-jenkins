@@ -16,7 +16,7 @@ class CloudFormation:
 
     def deploy_stack(self, stack: Stack) -> None:
         template = os.path.join(ROOT, stack["template"])
-        stack_name = stack.stack_name()
+        stack_name = stack.stack_name
         parameters = stack["parameters"]
         self.log.checkpoint(f"Deploy of {stack_name}")
         self.deploy(template, stack_name, parameters)

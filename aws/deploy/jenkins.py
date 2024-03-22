@@ -1,5 +1,5 @@
 import os
-from scripts.utils import stacks
+from utils import stacks
 
 
 def jenkins_stack_name(tenant: str) -> str:
@@ -24,7 +24,7 @@ def jenkins(
             "GitUserName": "jenkins-tcc",
             "Tenant": tenant,
             "GitEmail": "jenkins@jenkins.jenkins",
-            "SgInitIp": os.popen("curl ifconfig.me").read(),
+            "SgInitIp": os.popen("curl https://api.ipify.org").read(),
         },
         tenant,
     )
