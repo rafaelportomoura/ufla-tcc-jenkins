@@ -15,7 +15,13 @@ import utils.stacks as stacks
 
 FILE_DIR = os.path.dirname(__file__)
 
-command_id = sys.argv[1] if len(sys.argv) > 1 else None
+command_id = (
+    sys.argv[1]
+    if len(sys.argv) > 1
+    else json.loads(os.popen(f"/bin/cat {FILE_DIR}/command.output.json").read())[
+        "Command"
+    ]["CommandId"]
+)
 if not command_id:
     raise ValueError("Command ID is required")
 tenant = sys.argv[2] if len(sys.argv) > 2 else "tcc"
