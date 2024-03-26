@@ -34,16 +34,13 @@ COPY --chown=jenkins:jenkins ./config/plugins.txt /usr/share/jenkins/ref/plugins
 RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
 
 COPY --chown=jenkins:jenkins ./config/jcasc.yaml /jenkins/casc_configs/jcasc.yaml
-COPY --chown=jenkins:jenkins scripts/entrypoint.groovy /var/scripts/entrypoint.groovy
+COPY --chown=jenkins:jenkins scripts/entrypoint.groovy /jenkins_home/scripts/entrypoint.groovy
 COPY --chown=jenkins:jenkins config/entrypoint /var/jenkins_home/jobs/entrypoint
 
 USER root
 COPY --chown=jenkins:jenkins /root/.nvm /var/jenkins_home/.nvm
 RUN chown jenkins:jenkins -R /var/jenkins_home && chmod -R 777 /var/jenkins_home
 RUN chmod -R 755 /usr/local/aws-cli
-RUN chmod -R 755 /var/scripts
-RUN chown jenkins:jenkins -R /var/scripts
-RUN chmod -R +x /var/scripts
 
 USER jenkins
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/jenkins/casc_configs
