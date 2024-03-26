@@ -24,4 +24,6 @@ log = Log(log_level)
 
 
 cloudformation.delete_stack(jenkins_stack_name(tenant=tenant))
+cloudformation.wait_stack_delete(jenkins_stack_name(tenant=tenant))
 cloudformation.delete_stack(document_stack_name())
+cloudformation.wait_stack_delete(document_stack_name())
