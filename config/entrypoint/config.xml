@@ -11,7 +11,7 @@
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
   <triggers/>
   <concurrentBuild>false</concurrentBuild>
-  <customWorkspace>/jenkins_home/scripts</customWorkspace>
+  <customWorkspace>/var/scripts</customWorkspace>
   <builders>
     <javaposse.jobdsl.plugin.ExecuteDslScripts plugin="job-dsl@1.87">
       <targets>entrypoint.groovy</targets>
