@@ -44,7 +44,8 @@ RUN chmod -R 755 /usr/local/aws-cli
 RUN chmod -R 755 /var/scripts
 RUN chown jenkins:jenkins -R /var/scripts
 RUN chmod -R +x /var/scripts
-
+RUN chown jenkins:jenkins -R /var/jenkins_home/jobs
+RUN chmod -R 777 /var/jenkins_home/jobs
 USER jenkins
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/jenkins/casc_configs
 

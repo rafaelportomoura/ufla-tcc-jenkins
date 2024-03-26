@@ -2,6 +2,7 @@ import os
 import sys
 from typing import Any
 from os.path import abspath, dirname, sep
+import json
 
 sys.path.append(sep.join([dirname(dirname(dirname(abspath(__file__)))), "scripts"]))
 
@@ -28,7 +29,11 @@ log = Log(log_level)
 
 exports = cloudformation.list_exports()
 jenkins = cloudformation.get_export_value(exports, f"{tenant}-jenkins-instance")
-
 os.system(
     f"bash {FILE_DIR}/get-command.sh {jenkins} {command_id} {region} {profile}  > {FILE_DIR}/get_command.output.json"
 )
+command = json.loads(os.popen(f"/bin/cat {FILE_DIR}/get_command.output.json").read())
+
+status = command["Status"]
+
+print(status)
