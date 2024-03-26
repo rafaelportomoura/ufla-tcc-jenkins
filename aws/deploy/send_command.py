@@ -28,12 +28,6 @@ exports = cloudformation.list_exports()
 document = cloudformation.get_export_value(exports, "jenkins-document")
 jenkins = cloudformation.get_export_value(exports, f"{tenant}-jenkins-instance")
 
-command = os.popen(
-    f"bash {FILE_DIR}/send-command.sh {jenkins} {document} {clone} {region} {profile}"
-).read()
-
-os.system(f"echo {command} > {FILE_DIR}/command.output.json")
-
-command_id = command["Command"]["CommandId"]
-
-print(f"CommandId: {command_id}")
+os.system(
+    f"bash {FILE_DIR}/send-command.sh {jenkins} {document} {clone} {region} {profile} > {FILE_DIR}/command.output.json"
+)
