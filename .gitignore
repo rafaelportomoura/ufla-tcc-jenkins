@@ -1,4 +1,5 @@
 jobs/**
 __pycache__
 *.log
-deploy/*.output.*
+aws/deploy/*.output.log
+aws/deploy/*.output.json
