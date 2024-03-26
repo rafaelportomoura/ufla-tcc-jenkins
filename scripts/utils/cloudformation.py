@@ -30,7 +30,7 @@ class CloudFormation:
     def check_if_stack_is_deleted(self, stack_name: str) -> bool:
         DELETE_FINAL_STATUS = ["DELETE_FAILED", "CREATE_COMPLETE", "UPDATE_COMPLETE"]
         try:
-            stack = self.describe(stack_name)
+            stack = self.list_exports(stack_name)
             return stack in DELETE_FINAL_STATUS
         except Exception:
             return True
@@ -41,6 +41,7 @@ class CloudFormation:
         elif max_retries_seg == 1800:
             self.log.checkpoint(f"Waiting for {stack_name} to be deleted")
         if self.check_if_stack_is_deleted(stack_name=stack_name):
+            self.log.info(f"Stack {stack_name} has been deleted")
             return True
         stack = self.describe(stack_name)
         has_stacks = "Stacks" in stack

@@ -127,7 +127,7 @@ Resources:
               - Key: Name
                 Value: !Sub ${Tenant}-jenkins
             UserData:
-                Fn::Base64: !Sub "#!/bin/bash\nsudo dnf install -y https://s3.${AWS::Region}.amazonaws.com/amazon-ssm-${AWS::Region}/latest/linux_amd64/amazon-ssm-agent.rpm\nsudo dnf update –y\nsudo dnf upgrade -y\nsudo dnf install docker git -y\nsudo service docker start\nsudo usermod -a -G docker ssm-user\nsudo chown \nsudo chkconfig docker on\nsudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose\nsudo chmod +x /usr/local/bin/docker-compose\nsudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose\necho \"fim do script\" > /var/chegou_ao_fim.txt\n    #magic___^_^___line\n"
+                Fn::Base64: !Sub "#!/bin/bash\nsudo dnf install -y https://s3.${AWS::Region}.amazonaws.com/amazon-ssm-${AWS::Region}/latest/linux_amd64/amazon-ssm-agent.rpm\nsudo dnf update –y\nsudo dnf upgrade -y\nsudo dnf install docker git -y\nsudo service docker start\nsudo chkconfig docker on\nsudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose\nsudo chmod +x /usr/local/bin/docker-compose\nsudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose\nsudo usermod -aG docker ssm-user\necho \"fim do script\" > /var/chegou_ao_fim.txt\n    #magic___^_^___line\n"
 Outputs:
     JenkinsInstance:
         Description: "Jenkins Instance"

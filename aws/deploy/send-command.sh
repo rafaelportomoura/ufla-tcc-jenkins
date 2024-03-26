@@ -1,7 +1,7 @@
 # =========================================== SCRIPT ===============================================
 aws ssm send-command \
-  --profile ${4:-tcc} \
-  --region ${3:-us-east-2} \
+  --profile ${5:-tcc} \
+  --region ${4:-us-east-2} \
   --instance-ids $1 \
-  --document-name jenkins-document \
-  --parameters "Clone='${2:-False}'"
+  --document-name $2 \
+  --parameters "Clone='${3:-False}'"

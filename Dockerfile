@@ -38,8 +38,7 @@ COPY --chown=jenkins:jenkins scripts/entrypoint.groovy /var/scripts/entrypoint.g
 COPY --chown=jenkins:jenkins config/entrypoint /var/jenkins_home/jobs/entrypoint
 
 USER root
-RUN chown jenkins:jenkins -R /var/jenkins_home && chmod -R 777 /var/jenkins_home
-RUN chown jenkins:jenkins -R /var/jenkins_home/jobs && chmod -R 777 /var/jenkins_home/jobs
+RUN chown jenkins:jenkins -R /var/jenkins_home && chmod -R 777 /var/jenkins_homes
 RUN chmod -R 755 /root/.nvm
 RUN chmod -R 755 /usr/local/aws-cli
 RUN chmod -R 755 /var/scripts
