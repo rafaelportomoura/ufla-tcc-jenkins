@@ -34,8 +34,8 @@ COPY --chown=jenkins:jenkins ./config/plugins.txt /usr/share/jenkins/ref/plugins
 RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
 
 COPY --chown=jenkins:jenkins ./config/jcasc.yaml /jenkins/casc_configs/jcasc.yaml
-COPY --chown=jenkins:jenkins scripts/entrypoint.groovy /var/scripts/entrypoint.groovy
-COPY --chown=jenkins:jenkins config/jobs /var/jenkins_home/jobs/
+COPY --chown=jenkins:jenkins ./scripts/entrypoint.groovy /var/scripts/entrypoint.groovy
+COPY --chown=jenkins:jenkins ./config/jobs /var/jenkins_home/jobs/
 
 USER root
 RUN chown jenkins:jenkins -R /var/jenkins_home && chmod -R 777 /var/jenkins_home
