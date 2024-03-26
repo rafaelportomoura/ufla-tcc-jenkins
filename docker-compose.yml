@@ -10,7 +10,7 @@ services:
     ports:
       - '8080:8080'
     volumes:
-      - ./scripts:/jenkins_home/scripts
+      - ./scripts:/var/scripts
     restart: always
     environment:
       - JENKINS_FIRST_ADMIN_PASSWORD
