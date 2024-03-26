@@ -9,6 +9,21 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 
 class CloudFormation:
+    __FINAL_STATUS_STACKS = [
+        "CREATE_FAILED",
+        "UPDATE_ROLLBACK_FAILED",
+        "UPDATE_COMPLETE",
+        "DELETE_FAILED",
+        "IMPORT_COMPLETE",
+        "UPDATE_FAILED",
+        "ROLLBACK_COMPLETE",
+        "ROLLBACK_FAILED",
+        "IMPORT_ROLLBACK_COMPLETE",
+        "CREATE_COMPLETE",
+        "IMPORT_ROLLBACK_FAILED",
+        "UPDATE_ROLLBACK_COMPLETE",
+    ]
+
     def __init__(self, profile: str, region: str, log_level=1) -> None:
         self.log = Log(log_level=log_level)
         self.profile = profile
@@ -27,32 +42,34 @@ class CloudFormation:
         self.log.cmd(cmd)
         os.system(f"{cmd} &> /dev/null")
 
-    def check_if_stack_is_deleted(self, stack_name: str) -> bool:
-        DELETE_FINAL_STATUS = ["DELETE_FAILED", "CREATE_COMPLETE", "UPDATE_COMPLETE"]
+    def check_if_stack_is_deleted(self, stack_name: str) -> tuple[bool, str]:
+        DELETE_FINAL_STATUS = ["DELETE_COMPLETE"]
         try:
-            stack = self.list_exports(stack_name)
-            return stack in DELETE_FINAL_STATUS
+            stack = self.describe(stack_name)
+            has_stacks = "Stacks" in stack
+            if not has_stacks or len(stack["Stacks"]) == 0:
+                return True, None
+            stack = stack["Stacks"]
+            has_status = "StackStatus" in stack["Stacks"][0]
+            if not has_status:
+                return True, None
+            return (
+                stack["Stacks"][0]["StackStatus"] in DELETE_FINAL_STATUS,
+                stack["Stacks"][0]["StackStatus"],
+            )
         except Exception:
-            return True
+            return True, None
 
     def wait_stack_delete(self, stack_name: str, max_retries_seg=1800) -> bool:
         if max_retries_seg <= 0:
             return False
         elif max_retries_seg == 1800:
             self.log.checkpoint(f"Waiting for {stack_name} to be deleted")
-        if self.check_if_stack_is_deleted(stack_name=stack_name):
+        is_deleted, status = self.check_if_stack_is_deleted(stack_name=stack_name)
+        if is_deleted:
             self.log.info(f"Stack {stack_name} has been deleted")
             return True
-        stack = self.describe(stack_name)
-        has_stacks = "Stacks" in stack
-        if not has_stacks or len(stack["Stacks"]) == 0:
-            return True
-        stacks = stack["Stacks"]
-        has_status = "StackStatus" in stack["Stacks"][0]
-        if not has_status:
-            return True
 
-        status = stacks["StackStatus"]
         if status == "UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS":
             time.sleep(60)
             return self.wait_stack_delete(stack_name, max_retries_seg - 60)
@@ -91,8 +108,18 @@ class CloudFormation:
         res = os.popen(cmd).read()
         return json.loads(res)
 
+    def list_final_status_stacks(self) -> dict[str, list[dict[str, Any]]]:
+        try:
+            cmd = self.__list_stacks(self.__FINAL_STATUS_STACKS)
+            cmd += " 2> /dev/null"
+            self.log.cmd(cmd)
+            res = os.popen(cmd).read()
+            return json.loads(res)
+        except Exception:
+            return {"StackSummaries": []}
+
     def list_exports(self):
-        cmd = self.__prefix("list-exports")
+        cmd = self.__prefix("list-stacks --stack-status-filter {filter}")
         cmd += " 2> /dev/null"
         self.log.cmd(cmd)
         res = os.popen(cmd).read()
@@ -124,6 +151,15 @@ class CloudFormation:
         return (
             f"aws --profile {self.profile} --region {self.region} cloudformation {cmd}"
         )
+
+    def __list_stacks(self, filter: list[str] = None):
+        status_filter = ""
+        if filter:
+            filter = '" "'.join(filter)
+            status_filter = f'--stack-status-filter "{filter}"'
+
+        cmd = self.__prefix(f"list-stacks {status_filter}")
+        return cmd
 
     def __deploy(self, template, stack_name, parameters={}) -> str:
         cmd = "deploy --no-fail-on-empty-changeset --capabilities CAPABILITY_NAMED_IAM"

@@ -22,8 +22,10 @@ log_level = int(sys.argv[4], base=10) if len(sys.argv) > 4 else 3
 cloudformation = CloudFormation(profile, region, log_level)
 log = Log(log_level)
 
+stacks = cloudformation.list_final_status_stacks()["StackSummaries"]
 
-cloudformation.delete_stack(jenkins_stack_name(tenant=tenant))
-cloudformation.wait_stack_delete(jenkins_stack_name(tenant=tenant))
-cloudformation.delete_stack(document_stack_name())
-cloudformation.wait_stack_delete(document_stack_name())
+stacks = sorted(stacks, key=lambda x: x["CreationTime"], reverse=True)
+for stack in stacks:
+    stack_name = stack["StackName"]
+    cloudformation.delete_stack(stack_name)
+    cloudformation.wait_stack_delete(stack_name)
