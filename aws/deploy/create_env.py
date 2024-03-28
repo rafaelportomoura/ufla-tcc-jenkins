@@ -46,5 +46,8 @@ if status == "Success":
     for simbol in ["⣾", "⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽"]:
         print(f"\r{simbol} Waiting for Jenkins to start", end="", flush=True)
         sleep(1.5)
+    print(f"\r{' '* 31}")
+    log.checkpoint("Opened in browser")
     url = get_jenkins_url(tenant, cloudformation)
     os.system(f"xdg-open {url} &> /dev/null")
+    exit(0)

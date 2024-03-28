@@ -30,11 +30,13 @@ RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
 
 COPY --chown=jenkins:jenkins ./config/jcasc.yaml /jenkins/casc_configs/jcasc.yaml
 COPY --chown=jenkins:jenkins ./scripts /var/scripts
+RUN mkdir -p /var/jenkins_home/jobs
 
 USER root
 RUN chmod -R 777 /usr/local/aws-cli
 RUN chmod -R 777 /var/scripts
 RUN chmod -R 777 /var/jenkins_home
+RUN chown -R jenkins:jenkins /var/jenkins_home/jobs
 
 USER jenkins
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/jenkins/casc_configs
