@@ -29,13 +29,22 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/aws
 # Limpeza
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY ./config/plugins.txt /usr/share/jenkins/ref/plugins.txt
+USER jenkins
+COPY --chown=jenkins:jenkins ./config/plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
 
-COPY ./config/jcasc.yaml /jenkins/casc_configs/jcasc.yaml
-COPY ./scripts/entrypoint.groovy /var/scripts/entrypoint.groovy
-COPY ./config/jobs /var/jenkins_home/jobs/
+COPY --chown=jenkins:jenkins ./config/jcasc.yaml /jenkins/casc_configs/jcasc.yaml
+COPY --chown=jenkins:jenkins ./scripts /var/jenkins_home/scripts
+COPY --chown=jenkins:jenkins ./config/jobs /var/jenkins_home/jobs/
 
+USER root
+RUN cp -r /root/.nvm /var/jenkins_home/.nvm
+RUN chmod -R 755 /usr/local/aws-cli
+RUN chmod -R 755 /var/scripts
+RUN chmod -R +x /var/scripts
+RUN chown -R jenkins:jenkins /var/jenkins_home && chmod -R 777 /var/jenkins_home
+
+USER jenkins
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/jenkins/casc_configs
 
 ENV PATH="/usr/local/aws-cli/v2/current/bin:${PATH}"
