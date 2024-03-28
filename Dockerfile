@@ -34,15 +34,15 @@ COPY --chown=jenkins:jenkins ./config/plugins.txt /usr/share/jenkins/ref/plugins
 RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
 
 COPY --chown=jenkins:jenkins ./config/jcasc.yaml /jenkins/casc_configs/jcasc.yaml
+RUN mkdir -p /var/scripts
 COPY --chown=jenkins:jenkins ./scripts/entrypoint.groovy /var/scripts/entrypoint.groovy
 COPY --chown=jenkins:jenkins ./config/jobs /var/jenkins_home/jobs/
-
 USER root
+RUN cp -r /root/.nvm /var/jenkins_home
 RUN chown jenkins:jenkins -R /var/jenkins_home && chmod -R 777 /var/jenkins_home
-RUN chmod -R 755 /root/.nvm
+RUN chmod -R 777 /var/jenkins_home/.nvm
 RUN chmod -R 755 /usr/local/aws-cli
 RUN chmod -R 755 /var/scripts
-RUN chown jenkins:jenkins -R /var/scripts
 RUN chmod -R +x /var/scripts
 
 USER jenkins
