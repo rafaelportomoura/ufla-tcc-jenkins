@@ -11,6 +11,11 @@ RUN curl -L -O https://github.com/aws-cloudformation/cfn-lint/archive/refs/tags/
 RUN cd cfn-lint-0.86.0 && python3 setup.py clean --all && \
   python3 setup.py install
 
+# Instalação do Node.js e outras ferramentas
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
+  . "/root/.nvm/nvm.sh" && nvm install 20 && npm install -g pnpm
+
+
 # Instalação do Docker CLI
 RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc https://download.docker.com/linux/debian/gpg && \
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.asc] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list && \
