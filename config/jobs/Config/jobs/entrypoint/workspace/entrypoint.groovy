@@ -1,11 +1,11 @@
 job('Config/node') {
   description ''
   parameters {
-    stringParam('NodeVersion', 'NodeVersion')
+    stringParam('NodeVersion', '20')
     stringParam('DefaultPackageManager', 'pnpm')
   }
   steps {
-    shell('cp /root/.nvm/nvm.sh \$JENKINS_HOME/.nvm/nvm.sh')
+    shell('cp -r /root/.nvm \$JENKINS_HOME/.nvm')
     shell('source \$JENKINS_HOME/.nvm/nvm.sh')
     shell('nvm install \$NodeVersion')
     shell('nvm use \$NodeVersion')

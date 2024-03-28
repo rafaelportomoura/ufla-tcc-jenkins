@@ -1,7 +1,7 @@
 import os
 import json
-import time
 from typing import Any
+from utils.sleep import Sleep
 from utils.log import Log
 from utils.stacks import Stack
 
@@ -28,6 +28,7 @@ class CloudFormation:
         self.log = Log(log_level=log_level)
         self.profile = profile
         self.region = region
+        self.sleep = Sleep(self.log)
 
     def deploy_stack(self, stack: Stack) -> None:
         template = os.path.join(ROOT, stack["template"])
@@ -80,15 +81,7 @@ class CloudFormation:
             os.system(f"{cmd} &> /dev/null")
             sleep = 30
 
-        symbols = ["⣾", "⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽"]
-        for _ in range(sleep):
-            print(
-                f"\r{status}: {symbols[_ % len(symbols)]} ({sleep - (_ + 1)} seg)",
-                end="",
-                flush=True,
-            )
-            time.sleep(1)
-            print("\r" + " " * 30, end="", flush=True)
+        self.sleep.sleep(sleep, status + ": {{symbol}} ({{time_desc}} seg)")
         return self.wait_stack_delete(stack_name, max_retries_seg - sleep)
 
     def package(self, template: str) -> str:
