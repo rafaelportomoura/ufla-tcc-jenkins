@@ -35,7 +35,7 @@ COPY --chown=jenkins:jenkins ./scripts /var/scripts
 RUN mkdir -p /var/jenkins_home/jobs
 
 USER root
-RUN cp -r /root/.nvm /var/jenkins_home/.nvm
+RUN mv /root/.nvm /var/jenkins_home/.nvm
 RUN chmod -R 777 /var/jenkins_home/.nvm
 RUN chmod -R 777 /usr/local/aws-cli
 RUN chmod -R 777 /var/scripts
