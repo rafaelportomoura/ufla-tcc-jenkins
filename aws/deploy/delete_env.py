@@ -29,7 +29,7 @@ for stack in stacks:
     cloudformation.delete_stack(stack_name)
     waiting_stacks.append(stack_name)
 
-queue = waiting_stacks.copy()
+queue = waiting_stacks.copy() + ["Jenkins-Document-Deploy", "Tcc-Jenkins-Deploy"]
 
 while len(queue) > 0:
     for stack in waiting_stacks:
