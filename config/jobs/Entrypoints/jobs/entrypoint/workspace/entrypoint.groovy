@@ -5,8 +5,8 @@ folder('env') {
 job('env/config') {
   description ''
   parameters {
-    string('NodeVersion', 'NodeVersion')
-    string('DefaultPackageManager', 'pnpm')
+    stringParam('NodeVersion', 'NodeVersion')
+    stringParam('DefaultPackageManager', 'pnpm')
   }
   steps {
     shell("RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash")

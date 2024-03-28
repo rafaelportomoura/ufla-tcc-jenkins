@@ -1,5 +1,5 @@
 # Stage de Construção
-FROM jenkins/jenkins:2.448-jdk21 as builder
+FROM jenkins/jenkins:2.451-jdk21 as builder
 
 USER root
 
