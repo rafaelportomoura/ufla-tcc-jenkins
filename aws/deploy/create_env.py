@@ -37,7 +37,7 @@ log.checkpoint("Send Document to Jenkins instance")
 document_name = get_document(cloudformation)
 jenkins_instance = get_jenkins_instance(tenant, cloudformation)
 command = send_command(profile, region, jenkins_instance, document_name, clone=clone)
-log.cmd("Command_id", command["Command"]["CommandId"])
+log.cmd("CommandId:", command["Command"]["CommandId"], "\n")
 status = get_and_wait(
     profile, region, jenkins_instance, command["Command"]["CommandId"]
 )
