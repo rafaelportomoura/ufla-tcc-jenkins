@@ -34,14 +34,14 @@ COPY --chown=jenkins:jenkins ./config/plugins.txt /usr/share/jenkins/ref/plugins
 RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
 
 COPY --chown=jenkins:jenkins ./config/jcasc.yaml /jenkins/casc_configs/jcasc.yaml
-COPY --chown=jenkins:jenkins ./scripts /var/jenkins_home/scripts
+COPY --chown=jenkins:jenkins ./scripts /var/scripts
 COPY --chown=jenkins:jenkins ./config/jobs /var/jenkins_home/jobs/
 
 USER root
 RUN cp -r /root/.nvm /var/jenkins_home/.nvm
-RUN chmod -R 755 /usr/local/aws-cli
-RUN chmod -R 755 /var/scripts
-RUN chmod -R +x /var/scripts
+RUN chmod -R 777 /var/jenkins_home/.nvm
+RUN chmod -R 777 /usr/local/aws-cli
+RUN chmod -R 777 /var/scripts
 RUN chown -R jenkins:jenkins /var/jenkins_home && chmod -R 777 /var/jenkins_home
 
 USER jenkins
