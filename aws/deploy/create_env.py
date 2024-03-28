@@ -53,11 +53,12 @@ log.cmd("CommandId:", command["Command"]["CommandId"], "\n")
 status = get_and_wait(
     profile, region, jenkins_instance, command["Command"]["CommandId"], sleep
 )
-print()
-if status == "Success":
-    sleep.sleep(10, "{{symbol}} Refreshing stacks status in {{time_desc}} seconds")
-    print(f"\r{' '* 31}")
-    log.checkpoint("Opened in browser")
-    url = get_jenkins_url(tenant, cloudformation)
-    os.system(f"xdg-open {url} &> /dev/null")
-    exit(0)
+if status != "Success":
+    log.error("Failed to send document, final status: ", status)
+    exit(1)
+
+sleep.sleep(10, "{{symbol}} Get jenkins url in {{time_desc}} seconds")
+print(f"\r{' '* 31}")
+url = get_jenkins_url(tenant, cloudformation)
+log.checkpoint(f"Opening in browser with {url}")
+os.system(f"xdg-open {url} &> /dev/null")
