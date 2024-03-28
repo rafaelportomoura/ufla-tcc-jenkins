@@ -1,8 +1,4 @@
-folder('env') {
-  displayName('env')
-}
-
-job('config/node') {
+job('Config/node') {
   description ''
   parameters {
     stringParam('NodeVersion', 'NodeVersion')
