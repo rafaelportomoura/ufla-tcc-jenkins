@@ -17,8 +17,8 @@ def get_command(profile: str, region: str, jenkins: str, command_id: str):
     return json.loads(command)
 
 
-status_replace = lambda x, y=None: print(
-    f'\r{" " * (len(y if y else x) + 1)}\r\ueb19{x}', end="", flush=True
+status_replace = lambda status, erase_len, simbol="": print(
+    f'\r{" " * erase_len}\r{simbol} {status}', end="", flush=True
 )
 
 
@@ -27,13 +27,10 @@ def get_and_wait(profile: str, region: str, jenkins: str, command_id: str):
     status = get_status()
     print(status, end="")
     while status == "InProgress":
-        for _ in range(2):
+        for simbol in ["⣾", "⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽"]:
+            status_replace(status, len(status) + 2, simbol)
             sleep(1)
-            status_replace(status)
-            for __ in range(3):
-                status_replace(status)
-                sleep(1)
-        y = status
+        y = len(status) + 2
         status = get_status()
         status_replace(status, y)
     print()
