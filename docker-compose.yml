@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    user: root
     image: rafaelportomoura/jenkins:latest
     container_name: jenkins-tcc
     ports:

@@ -41,7 +41,7 @@ log.cmd("CommandId:", command["Command"]["CommandId"], "\n")
 status = get_and_wait(
     profile, region, jenkins_instance, command["Command"]["CommandId"]
 )
-
+print()
 if status == "Success":
     for simbol in ["⣾", "⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽"]:
         print(f"\r{simbol} Waiting for Jenkins to start", end="", flush=True)
