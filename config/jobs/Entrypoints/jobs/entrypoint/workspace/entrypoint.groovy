@@ -9,6 +9,7 @@ job('env/config') {
     string('DefaultPackageManager', 'pnpm')
   }
   steps {
+    shell("RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash")
     shell('. \$JENKINS_HOME/.nvm/nvm.sh')
     shell('nvm install \$NodeVersion')
     shell('nvm user \$NodeVersion')
