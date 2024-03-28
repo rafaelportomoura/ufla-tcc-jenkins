@@ -46,17 +46,16 @@ class CloudFormation:
         DELETE_FINAL_STATUS = ["DELETE_COMPLETE"]
         try:
             stack = self.describe(stack_name)
-            print(stack.keys())
             has_stacks = "Stacks" in stack
             if not has_stacks or len(stack["Stacks"]) == 0:
                 return True, None
-            stack = stack["Stacks"]
-            has_status = "StackStatus" in stack["Stacks"][0]
+            stack = stack["Stacks"][0]
+            has_status = "StackStatus" in stack
             if not has_status:
                 return True, None
             return (
-                stack["Stacks"][0]["StackStatus"] in DELETE_FINAL_STATUS,
-                stack["Stacks"][0]["StackStatus"],
+                stack["StackStatus"] in DELETE_FINAL_STATUS,
+                stack["StackStatus"],
             )
         except Exception:
             return True, None
@@ -67,22 +66,30 @@ class CloudFormation:
         elif max_retries_seg == 1800:
             self.log.checkpoint(f"Waiting for {stack_name} to be deleted")
         is_deleted, status = self.check_if_stack_is_deleted(stack_name=stack_name)
+
         if is_deleted:
-            self.log.info(f"Stack {stack_name} has been deleted")
+            self.log.info(f"\nStack {stack_name} has been deleted")
             return True
 
-        if status == "UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS":
-            time.sleep(60)
-            return self.wait_stack_delete(stack_name, max_retries_seg - 60)
+        sleep = 10
 
-        if status == "UPDATE_ROLLBACK_COMPLETE":
+        if status == "UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS":
+            sleep = 60
+        elif status == "UPDATE_ROLLBACK_COMPLETE":
             cmd = self.delete_stack(stack_name)
             os.system(f"{cmd} &> /dev/null")
-            time.sleep(30)
-            return self.wait_stack_delete(stack_name, max_retries_seg - 30)
+            sleep = 30
 
-        time.sleep(10)
-        return self.wait_stack_delete(stack_name, max_retries_seg - 10)
+        symbols = ["⣾", "⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽"]
+        for _ in range(sleep):
+            print(
+                f"\r{status}: {symbols[_ % len(symbols)]} ({sleep - (_ + 1)} seg)",
+                end="",
+                flush=True,
+            )
+            time.sleep(1)
+            print("\r" + " " * 30, end="", flush=True)
+        return self.wait_stack_delete(stack_name, max_retries_seg - sleep)
 
     def package(self, template: str) -> str:
         output = "output.yaml"
