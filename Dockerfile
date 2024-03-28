@@ -30,7 +30,6 @@ RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
 
 COPY --chown=jenkins:jenkins ./config/jcasc.yaml /jenkins/casc_configs/jcasc.yaml
 COPY --chown=jenkins:jenkins ./scripts /var/scripts
-RUN mkdir -p /var/jenkins_home/jobs
 
 USER root
 RUN chmod -R 777 /usr/local/aws-cli

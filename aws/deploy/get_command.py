@@ -34,6 +34,7 @@ def get_and_wait(profile: str, region: str, jenkins: str, command_id: str):
         status = get_status()
         status_replace(status, y)
     print()
+    return status
 
 
 if __name__ == "__main__" and abspath(__file__) == abspath(sys.argv[0]):
