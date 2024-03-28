@@ -18,7 +18,7 @@ def get_command(profile: str, region: str, jenkins: str, command_id: str):
 
 
 status_replace = lambda status, erase_len, simbol="": print(
-    f'\r{" " * erase_len + len(simbol)}\r{simbol}{status}', end="", flush=True
+    f'\r{" " * (erase_len + len(simbol))}\r{simbol}{status}', end="", flush=True
 )
 
 
