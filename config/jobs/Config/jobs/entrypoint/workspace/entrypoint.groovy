@@ -5,8 +5,8 @@ job('Config/node') {
     stringParam('DefaultPackageManager', 'pnpm')
   }
   steps {
-    shell('cp /root/.nvm/nvm.sh ~/.nvm/nvm.sh')
-    shell('source ~/.nvm/nvm.sh')
+    shell('cp /root/.nvm/nvm.sh \$JENKINS_HOME/.nvm/nvm.sh')
+    shell('source \$JENKINS_HOME/.nvm/nvm.sh')
     shell('nvm install \$NodeVersion')
     shell('nvm use \$NodeVersion')
     shell('npm install -g \$DefaultPackageManager')
