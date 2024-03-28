@@ -5,8 +5,6 @@ from scripts.sleep import Sleep
 from scripts.log import Log
 from scripts.stacks import Stack
 
-self.template_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-
 
 class CloudFormation:
     __FINAL_STATUS_STACKS = [
