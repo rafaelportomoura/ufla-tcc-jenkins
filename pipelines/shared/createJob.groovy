@@ -1,6 +1,6 @@
 
 
-def microserviceJob(String folder, String name, String repository, String scm, String branch, String shell, def params) {
+def microserviceJob(String folder, String name, String repository, String scm, String branch, def params, String shell) {
     job(folder + name) {
         scm {
             git {

@@ -11,11 +11,6 @@ RUN curl -L -O https://github.com/aws-cloudformation/cfn-lint/archive/refs/tags/
 RUN cd cfn-lint-0.86.0 && python3 setup.py clean --all && \
   python3 setup.py install
 
-
-# Instalação do Node.js e outras ferramentas
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
-  . "/root/.nvm/nvm.sh" && nvm install 20 && npm install -g pnpm
-
 # Instalação do Docker CLI
 RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc https://download.docker.com/linux/debian/gpg && \
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.asc] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list && \
@@ -33,16 +28,19 @@ USER jenkins
 COPY --chown=jenkins:jenkins ./config/plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
 
+# Instalação do Node.js e outras ferramentas
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
+  . "$HOME/.nvm/nvm.sh" && nvm install 20 && npm install -g pnpm
+
 COPY --chown=jenkins:jenkins ./config/jcasc.yaml /jenkins/casc_configs/jcasc.yaml
 COPY --chown=jenkins:jenkins ./scripts /var/scripts
-COPY --chown=jenkins:jenkins ./config/jobs /var/jenkins_home/jobs/
+RUN mkdir -p /var/jenkins_home/jobs
 
 USER root
-RUN cp -r /root/.nvm /var/jenkins_home/.nvm
 RUN chmod -R 777 /var/jenkins_home/.nvm
 RUN chmod -R 777 /usr/local/aws-cli
 RUN chmod -R 777 /var/scripts
-RUN chown -R jenkins:jenkins /var/jenkins_home && chmod -R 777 /var/jenkins_home
+RUN chmod -R 777 /var/jenkins_home
 
 USER jenkins
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/jenkins/casc_configs
