@@ -42,4 +42,5 @@ ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/jenk
 
 ENV PATH="/usr/local/aws-cli/v2/current/bin:${PATH}"
 
+COPY ./config/init.groovy.d /usr/share/jenkins/ref/init.groovy.d
 CMD ["/bin/bash", "/usr/local/bin/jenkins.sh"]
