@@ -29,15 +29,5 @@ for stack in stacks:
     cloudformation.delete_stack(stack_name)
     waiting_stacks.append(stack_name)
 
-queue = waiting_stacks.copy() + ["Jenkins-Document-Deploy", "Tcc-Jenkins-Deploy"]
-
-while len(queue) > 0:
-    for stack in waiting_stacks:
-        is_deleted, status = cloudformation.check_if_stack_is_deleted(stack)
-        log.verbose(f"Stack {stack} has status: {status}")
-        if is_deleted:
-            queue.remove(stack)
-            log.info(f"Stack {stack} deleted")
-    waiting_stacks = queue.copy()
-    sleep = Sleep(log)
-    sleep.sleep(10, "{{symbol}} Refreshing stacks status in {{time_desc}} seconds")
+for stack in waiting_stacks + ["Jenkins-Document-Deploy", "Tcc-Jenkins-Deploy"]:
+    cloudformation.wait_stack_delete(stack)
