@@ -5,7 +5,7 @@ from scripts.sleep import Sleep
 from scripts.log import Log
 from scripts.stacks import Stack
 
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+self.template_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 
 class CloudFormation:
@@ -31,7 +31,7 @@ class CloudFormation:
         self.sleep = Sleep(self.log)
 
     def deploy_stack(self, stack: Stack) -> None:
-        template = os.path.join(ROOT, stack["template"])
+        template = stack["template"]
         stack_name = stack.stack_name
         parameters = stack["parameters"]
         self.log.checkpoint(f"Deploy of {stack_name}")

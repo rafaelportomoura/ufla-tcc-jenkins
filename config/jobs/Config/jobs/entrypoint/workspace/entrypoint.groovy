@@ -1,19 +1,3 @@
-job('Config/node') {
-  description ''
-  parameters {
-    stringParam('NodeVersion', '20')
-    stringParam('DefaultPackageManager', 'pnpm')
-  }
-  steps {
-    shell('cp -r /root/.nvm \$JENKINS_HOME/.nvm')
-    shell('source \$JENKINS_HOME/.nvm/nvm.sh')
-    shell('nvm install \$NodeVersion')
-    shell('nvm use \$NodeVersion')
-    shell('npm install -g \$DefaultPackageManager')
-  }
-}
-
-// Main job creation block
 folder('Tcc') {
     displayName('Tcc')
 }
