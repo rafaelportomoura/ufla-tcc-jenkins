@@ -24,8 +24,6 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/aws
 # Limpeza
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
-  . "$HOME/.nvm/nvm.sh" && nvm install 20 && npm install -g pnpm
 USER jenkins
 COPY --chown=jenkins:jenkins ./config/plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
@@ -35,8 +33,6 @@ COPY --chown=jenkins:jenkins ./scripts /var/scripts
 RUN mkdir -p /var/jenkins_home/jobs
 
 USER root
-RUN mv /root/.nvm /var/jenkins_home/.nvm
-RUN chmod -R 777 /var/jenkins_home/.nvm
 RUN chmod -R 777 /usr/local/aws-cli
 RUN chmod -R 777 /var/scripts
 RUN chmod -R 777 /var/jenkins_home
