@@ -18,7 +18,7 @@ def get_command(profile: str, region: str, jenkins: str, command_id: str):
 
 
 status_replace = lambda x, y=None: print(
-    f'\r{" " * (len(y if y else x) + 3)}\r{x}', end="", flush=True
+    f'\r{" " * (len(y if y else x) + 1)}\r\ueb19{x}', end="", flush=True
 )
 
 
@@ -31,7 +31,7 @@ def get_and_wait(profile: str, region: str, jenkins: str, command_id: str):
             sleep(1)
             status_replace(status)
             for __ in range(3):
-                print(".", end="", flush=True)
+                status_replace(status)
                 sleep(1)
         y = status
         status = get_status()
@@ -39,7 +39,7 @@ def get_and_wait(profile: str, region: str, jenkins: str, command_id: str):
     print()
 
 
-if __name__ == "__main__" and __file__ == sys.argv[0]:
+if __name__ == "__main__" and abspath(__file__) == abspath(sys.argv[0]):
     sys.path.append(sep.join([dirname(dirname(dirname(abspath(__file__)))), "scripts"]))
 
     from utils.cloudformation import CloudFormation
@@ -71,4 +71,4 @@ if __name__ == "__main__" and __file__ == sys.argv[0]:
 
     status = command["Status"]
 
-    print(status)
+    get_and_wait(profile, region, jenkins, command_id)

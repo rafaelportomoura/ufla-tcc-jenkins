@@ -46,6 +46,7 @@ class CloudFormation:
         DELETE_FINAL_STATUS = ["DELETE_COMPLETE"]
         try:
             stack = self.describe(stack_name)
+            print(stack.keys())
             has_stacks = "Stacks" in stack
             if not has_stacks or len(stack["Stacks"]) == 0:
                 return True, None

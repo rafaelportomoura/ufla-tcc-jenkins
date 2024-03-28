@@ -34,6 +34,7 @@ cloudformation.deploy_stack(stack=document())
 document_name = get_document(cloudformation)
 jenkins_instance = get_jenkins_instance(tenant, cloudformation)
 command = send_command(profile, region, jenkins_instance, document_name, clone=clone)
+print(command["Command"]["CommandId"])
 get_and_wait(profile, region, jenkins_instance, command["Command"]["CommandId"])
 # OPEN URL
 url = get_jenkins_url(tenant, cloudformation)

@@ -24,13 +24,11 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/aws
 # Limpeza
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
+  . "$HOME/.nvm/nvm.sh" && nvm install 20 && npm install -g pnpm
 USER jenkins
 COPY --chown=jenkins:jenkins ./config/plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
-
-# Instalação do Node.js e outras ferramentas
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
-  . "$HOME/.nvm/nvm.sh" && nvm install 20 && npm install -g pnpm
 
 COPY --chown=jenkins:jenkins ./config/jcasc.yaml /jenkins/casc_configs/jcasc.yaml
 COPY --chown=jenkins:jenkins ./scripts /var/scripts
