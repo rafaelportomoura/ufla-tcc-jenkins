@@ -30,5 +30,17 @@ def jenkins(
     )
 
 
+def get_jenkins_instance(tenant: str, cloudformation) -> str:
+    exports = cloudformation.list_exports()
+    jenkins = cloudformation.get_export_value(exports, f"{tenant}-jenkins-instance")
+    return jenkins
+
+
+def get_jenkins_url(tenant: str, cloudformation) -> str:
+    exports = cloudformation.list_exports()
+    jenkins = cloudformation.get_export_value(exports, f"{tenant}-jenkins-url")
+    return jenkins
+
+
 def document_stack_name() -> str:
     return stacks.stack_name(name="Document-Run-Container")

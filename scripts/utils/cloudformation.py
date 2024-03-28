@@ -119,7 +119,7 @@ class CloudFormation:
             return {"StackSummaries": []}
 
     def list_exports(self):
-        cmd = self.__prefix("list-stacks --stack-status-filter {filter}")
+        cmd = self.__prefix("list-exports")
         cmd += " 2> /dev/null"
         self.log.cmd(cmd)
         res = os.popen(cmd).read()

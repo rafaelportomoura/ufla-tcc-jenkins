@@ -24,5 +24,11 @@ def document(
     )
 
 
+def get_document(cloudformation) -> str:
+    exports = cloudformation.list_exports()
+    document = cloudformation.get_export_value(exports, "jenkins-document")
+    return document
+
+
 def document_stack_name() -> str:
     return stack_name(name="Jenkins-Document")
