@@ -8,11 +8,14 @@ sys.path.append(sep.join([dirname(dirname(dirname(abspath(__file__)))), "scripts
 from send_command import send_command
 from get_command import get_and_wait
 from document import document, get_document
-from jenkins import jenkins, get_jenkins_instance, get_jenkins_url
+from jenkins import jenkins, get_jenkins_instance, get_jenkins_url, jenkins_stack_name
 from utils.cloudformation import CloudFormation
 from utils.log import Log
 
-clone = sys.argv[1] == "True" if len(sys.argv) > 1 else False
+clean_environment = False
+
+
+clone = sys.argv[1] == "True" if len(sys.argv) > 1 else clean_environment
 vpc = sys.argv[2] if len(sys.argv) > 2 else "vpc-0826717742c251f0f"
 subnet = sys.argv[3] if len(sys.argv) > 3 else "subnet-0bc9e41ccc407a504"
 amiid = sys.argv[4] if len(sys.argv) > 4 else "ami-022661f8a4a1b91cf"
@@ -24,6 +27,13 @@ log_level = int(sys.argv[9], base=10) if len(sys.argv) > 9 else 3
 
 log = Log(log_level=log_level)
 cloudformation = CloudFormation(profile, region, log_level)
+
+if clone == False:
+    stacks = cloudformation.list_final_status_stacks()["StackSummaries"]
+    has_jenkins_stack = jenkins_stack_name(tenant) in [
+        stack["StackName"] for stack in stacks
+    ]
+    clone = not has_jenkins_stack
 
 # DEPLOY
 cloudformation.deploy_stack(
