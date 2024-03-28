@@ -2,7 +2,9 @@ import os
 import sys
 from os.path import abspath, dirname, sep
 import json
-from time import sleep
+
+if abspath(__file__) != abspath(sys.argv[0]):
+    from scripts.sleep import Sleep
 
 
 def get_command(profile: str, region: str, jenkins: str, command_id: str):
@@ -22,26 +24,25 @@ status_replace = lambda status, erase_len, simbol="": print(
 )
 
 
-def get_and_wait(profile: str, region: str, jenkins: str, command_id: str):
+def get_and_wait(
+    profile: str, region: str, jenkins: str, command_id: str, sleep: Sleep
+):
     get_status = lambda: get_command(profile, region, jenkins, command_id)["Status"]
     status = get_status()
     print(status, end="")
     while status == "InProgress":
-        for simbol in ["⣾", "⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽"]:
-            status_replace(status, len(status), simbol + " ")
-            sleep(1)
-        y = len(status) + 2
+        old_len = len(status) + 3
         status = get_status()
-        status_replace(status, y)
-    print()
+        sleep.sleep(7, "{{symbol}} " + status, erase_len=old_len)
     return status
 
 
 if __name__ == "__main__" and abspath(__file__) == abspath(sys.argv[0]):
-    sys.path.append(sep.join([dirname(dirname(dirname(abspath(__file__)))), "scripts"]))
+    sys.path.append(dirname(dirname(dirname(abspath(__file__)))))
 
-    from utils.cloudformation import CloudFormation
-    from utils.log import Log
+    from scripts.cloudformation import CloudFormation
+    from scripts.log import Log
+    from scripts.sleep import Sleep
 
     FILE_DIR = os.path.dirname(__file__)
 
@@ -69,4 +70,4 @@ if __name__ == "__main__" and abspath(__file__) == abspath(sys.argv[0]):
 
     status = command["Status"]
 
-    get_and_wait(profile, region, jenkins, command_id)
+    get_and_wait(profile, region, jenkins, command_id, Sleep(log))

@@ -1,5 +1,5 @@
 import os
-from utils import stacks
+from scripts import stacks
 
 
 def jenkins_stack_name(tenant: str) -> str:

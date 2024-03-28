@@ -1,5 +1,5 @@
 import os
-from utils.log import Log
+from scripts.log import Log
 
 
 def remove_from_bucket(profile: str, bucket: str, log: Log) -> None:

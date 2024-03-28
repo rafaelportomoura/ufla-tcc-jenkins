@@ -23,9 +23,9 @@ if __name__ == "__main__" and __file__ == sys.argv[0]:
     from os.path import abspath, dirname, sep
 
     dir_of_file = dirname(abspath(__file__))
-    sys.path.append(sep.join([dirname(dirname(dir_of_file)), "scripts"]))
-    from utils.cloudformation import CloudFormation
-    from utils.log import Log
+    sys.path.append(dirname(dirname(dirname(abspath(__file__)))))
+    from scripts.cloudformation import CloudFormation
+    from scripts.log import Log
 
     clone = sys.argv[1] == "True" if len(sys.argv) > 1 else False
     tenant = sys.argv[2] if len(sys.argv) > 2 else "tcc"

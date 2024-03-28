@@ -1,16 +1,17 @@
 import os
 import sys
-from os.path import abspath, dirname, sep
+from os.path import abspath, dirname
 from time import sleep
 
-sys.path.append(sep.join([dirname(dirname(dirname(abspath(__file__)))), "scripts"]))
+sys.path.append(dirname(dirname(dirname(abspath(__file__)))))
 
 from send_command import send_command
 from get_command import get_and_wait
 from document import document, get_document
 from jenkins import jenkins, get_jenkins_instance, get_jenkins_url, jenkins_stack_name
-from utils.cloudformation import CloudFormation
-from utils.log import Log
+from scripts.cloudformation import CloudFormation
+from scripts.log import Log
+from scripts.sleep import Sleep
 
 clean_environment = False
 
@@ -26,6 +27,7 @@ profile = sys.argv[8] if len(sys.argv) > 8 else "tcc"
 log_level = int(sys.argv[9], base=10) if len(sys.argv) > 9 else 3
 
 log = Log(log_level=log_level)
+sleep = Sleep(log)
 cloudformation = CloudFormation(profile, region, log_level)
 
 if clone == False:
@@ -49,13 +51,11 @@ jenkins_instance = get_jenkins_instance(tenant, cloudformation)
 command = send_command(profile, region, jenkins_instance, document_name, clone=clone)
 log.cmd("CommandId:", command["Command"]["CommandId"], "\n")
 status = get_and_wait(
-    profile, region, jenkins_instance, command["Command"]["CommandId"]
+    profile, region, jenkins_instance, command["Command"]["CommandId"], sleep
 )
 print()
 if status == "Success":
-    for simbol in ["⣾", "⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽"]:
-        print(f"\r{simbol} Waiting for Jenkins to start", end="", flush=True)
-        sleep(1.5)
+    sleep.sleep(10, "{{symbol}} Refreshing stacks status in {{time_desc}} seconds")
     print(f"\r{' '* 31}")
     log.checkpoint("Opened in browser")
     url = get_jenkins_url(tenant, cloudformation)

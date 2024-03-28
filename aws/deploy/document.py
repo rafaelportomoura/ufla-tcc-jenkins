@@ -1,5 +1,5 @@
 import os
-from utils.stacks import Stack, stack_name
+from scripts.stacks import Stack, stack_name
 
 
 def document(

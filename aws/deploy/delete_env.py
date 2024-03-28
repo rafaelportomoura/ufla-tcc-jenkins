@@ -1,15 +1,14 @@
 import os
 import sys
-from typing import Any
-from os.path import abspath, dirname, sep
-import time
+from os.path import abspath, dirname
 
-sys.path.append(sep.join([dirname(dirname(dirname(abspath(__file__)))), "scripts"]))
+sys.path.append(dirname(dirname(dirname(abspath(__file__)))))
 
 
-from utils.cloudformation import CloudFormation
-from utils.log import Log
-import utils.stacks as stacks
+from scripts.cloudformation import CloudFormation
+from scripts.log import Log
+import scripts.stacks as stacks
+import scripts.sleep as Sleep
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
 
@@ -40,13 +39,5 @@ while len(queue) > 0:
             queue.remove(stack)
             log.info(f"Stack {stack} deleted")
     waiting_stacks = queue.copy()
-    symbols = ["⣾", "⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽"]
-    sleep_time = len(symbols)
-    for _ in range(sleep_time):
-        log.verbose(
-            f"\r({sleep_time - (_ + 1)} seg)",
-            end="",
-            flush=True,
-        )
-        time.sleep(1)
-        log.verbose("\r" + " " * 30 + "\r", end="", flush=True)
+    sleep = Sleep(log)
+    sleep.sleep(10, "{{symbol}} Refreshing stacks status in {{time_desc}} seconds")
