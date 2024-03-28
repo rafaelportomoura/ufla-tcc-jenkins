@@ -8,7 +8,7 @@ sys.path.append(dirname(dirname(dirname(abspath(__file__)))))
 from scripts.cloudformation import CloudFormation
 from scripts.log import Log
 import scripts.stacks as stacks
-import scripts.sleep as Sleep
+from scripts.sleep import Sleep
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
 
