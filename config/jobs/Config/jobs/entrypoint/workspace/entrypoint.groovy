@@ -61,13 +61,10 @@ job('Config/nodejs') {
 }
 
 job('Config/git') {
-    parameters{
-        stringParam('NODE_VERSION', '20', 'Node version')
-    }
     steps {
-        sh("
+        sh("""
             git config --global credential.helper '!aws codecommit credential-helper $@'
-            git config --global credential.UseHttpPath true"
-        )
+            git config --global credential.UseHttpPath true
+        """)
     }
 }
