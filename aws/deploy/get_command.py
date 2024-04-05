@@ -36,9 +36,9 @@ def get_and_wait(
     status = get_status()
     print(status, end="")
     while status == "InProgress":
-        old_len = len(status) + 3
+        erase_len = len(status) + 3
+        sleep.sleep(seconds=10, message="{{symbol}} " + status, erase_len=erase_len)
         status = get_status()
-        sleep.sleep(7, "{{symbol}} " + status, erase_len=old_len)
     return status
 
 

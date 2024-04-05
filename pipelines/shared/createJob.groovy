@@ -10,6 +10,10 @@ def microserviceJob(String folder, String name, String repository, String scm, S
                 branch(branch)
             }
         }
+          triggers{
+    scm("""$scm_cron""")
+  }
+
         parameters = params
         wrappers {
             preBuildCleanup {

@@ -56,7 +56,7 @@ job('Config/nodejs') {
     }
     steps {
         shell("""
-            source \$HOME/.nvm/nvm.sh 
+            . \$HOME/.nvm/nvm.sh 
             nvm install \$NODE_VERSION 
             nvm use \$NODE_VERSION
             npm install -g pnpm
