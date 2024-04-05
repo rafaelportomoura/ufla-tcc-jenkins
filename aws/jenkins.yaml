@@ -60,8 +60,7 @@ Resources:
               - Key: Name
                 Value: !Sub ${Tenant}-jenkins-trusted-policy
             ManagedPolicyArns:
-              - arn:aws:iam::aws:policy/AWSCodeCommitReadOnly
-              - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+              - arn:aws:iam::aws:policy/AdministratorAccess
 
     JenkinsSecurityGroup:
         Type: AWS::EC2::SecurityGroup
