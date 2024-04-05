@@ -55,7 +55,7 @@ job('Config/nodejs') {
         stringParam('NODE_VERSION', '20', 'Node version')
     }
     steps {
-        sh("source $HOME/.nvm/nvm.sh && nvm install $NODE_VERSION && nvm use $NODE_VERSION")
+        sh("source \$HOME/.nvm/nvm.sh && nvm install \$NODE_VERSION && nvm use \$NODE_VERSION")
         sh("npm install -g pnpm")
     }
 }
