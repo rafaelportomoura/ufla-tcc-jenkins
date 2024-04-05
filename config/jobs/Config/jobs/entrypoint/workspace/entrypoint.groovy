@@ -48,3 +48,26 @@ job('Tcc/entrypoint') {
         }
     }
 }
+
+
+job('Config/nodejs') {
+    parameters{
+        stringParam('NODE_VERSION', '20', 'Node version')
+    }
+    steps {
+        sh("source $HOME/.nvm/nvm.sh && nvm install $NODE_VERSION && nvm use $NODE_VERSION")
+        sh("npm install -g pnpm")
+    }
+}
+
+job('Config/git') {
+    parameters{
+        stringParam('NODE_VERSION', '20', 'Node version')
+    }
+    steps {
+        sh("
+            git config --global credential.helper '!aws codecommit credential-helper $@'
+            git config --global credential.UseHttpPath true"
+        )
+    }
+}
