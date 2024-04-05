@@ -19,7 +19,7 @@ def send_command(
     return json.loads(command)
 
 
-if __name__ == "__main__" and __file__ == sys.argv[0]:
+if __name__ == "__main__" and __file__ == os.path.abspath(sys.argv[0]):
     from os.path import abspath, dirname, sep
 
     dir_of_file = dirname(abspath(__file__))
@@ -27,7 +27,7 @@ if __name__ == "__main__" and __file__ == sys.argv[0]:
     from scripts.cloudformation import CloudFormation
     from scripts.log import Log
 
-    clone = sys.argv[1] == "True" if len(sys.argv) > 1 else False
+    clone = sys.argv[1].lower() == "true" if len(sys.argv) > 1 else False
     tenant = sys.argv[2] if len(sys.argv) > 2 else "tcc"
     region = sys.argv[3] if len(sys.argv) > 3 else "us-east-2"
     profile = sys.argv[4] if len(sys.argv) > 4 else "tcc"

@@ -5,6 +5,11 @@ import json
 
 if abspath(__file__) != abspath(sys.argv[0]):
     from scripts.sleep import Sleep
+else:
+    sys.path.append(dirname(dirname(dirname(abspath(__file__)))))
+    from scripts.sleep import Sleep
+    from scripts.cloudformation import CloudFormation
+    from scripts.log import Log
 
 
 def get_command(profile: str, region: str, jenkins: str, command_id: str):
@@ -38,12 +43,6 @@ def get_and_wait(
 
 
 if __name__ == "__main__" and abspath(__file__) == abspath(sys.argv[0]):
-    sys.path.append(dirname(dirname(dirname(abspath(__file__)))))
-
-    from scripts.cloudformation import CloudFormation
-    from scripts.log import Log
-    from scripts.sleep import Sleep
-
     FILE_DIR = os.path.dirname(__file__)
 
     command_id = sys.argv[1] if len(sys.argv) > 1 else None
@@ -70,4 +69,6 @@ if __name__ == "__main__" and abspath(__file__) == abspath(sys.argv[0]):
 
     status = command["Status"]
 
-    get_and_wait(profile, region, jenkins, command_id, Sleep(log))
+    final_status = get_and_wait(profile, region, jenkins, command_id, Sleep(log))
+
+    print("✅" if final_status == "Success" else "❌", final_status)

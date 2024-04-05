@@ -13,10 +13,10 @@ from scripts.cloudformation import CloudFormation
 from scripts.log import Log
 from scripts.sleep import Sleep
 
-clean_environment = False
+new_environment = False
+send_document = True
 
-
-clone = sys.argv[1] == "True" if len(sys.argv) > 1 else clean_environment
+clone = sys.argv[1].lower() == "true" if len(sys.argv) > 1 else new_environment
 vpc = sys.argv[2] if len(sys.argv) > 2 else "vpc-0826717742c251f0f"
 subnet = sys.argv[3] if len(sys.argv) > 3 else "subnet-0bc9e41ccc407a504"
 amiid = sys.argv[4] if len(sys.argv) > 4 else "ami-022661f8a4a1b91cf"
@@ -29,8 +29,17 @@ log_level = int(sys.argv[9], base=10) if len(sys.argv) > 9 else 3
 log = Log(log_level=log_level)
 sleep = Sleep(log)
 cloudformation = CloudFormation(profile, region, log_level)
-
-if clone == False:
+if clone == False and sys.argv[1].lower() in [
+    "notsend",
+    "nosend",
+    "not_send",
+    "no_send",
+    "not send",
+    "no send",
+]:
+    clone = False
+    send_document = False
+elif clone == False:
     stacks = cloudformation.list_final_status_stacks()["StackSummaries"]
     has_jenkins_stack = jenkins_stack_name(tenant) in [
         stack["StackName"] for stack in stacks
@@ -45,17 +54,26 @@ cloudformation.deploy_stack(
 )
 cloudformation.deploy_stack(stack=document())
 
-log.checkpoint("Send Document to Jenkins instance")
-document_name = get_document(cloudformation)
-jenkins_instance = get_jenkins_instance(tenant, cloudformation)
-command = send_command(profile, region, jenkins_instance, document_name, clone=clone)
-log.cmd("CommandId:", command["Command"]["CommandId"], "\n")
-status = get_and_wait(
-    profile, region, jenkins_instance, command["Command"]["CommandId"], sleep
-)
-if status != "Success":
-    log.error("Failed to send document, final status: ", status)
-    exit(1)
+
+def send_document_procedure():
+    log.checkpoint("Send Document to Jenkins instance")
+    document_name = get_document(cloudformation)
+    jenkins_instance = get_jenkins_instance(tenant, cloudformation)
+    command = send_command(
+        profile, region, jenkins_instance, document_name, clone=clone
+    )
+    log.cmd("CommandId:", command["Command"]["CommandId"], "\n")
+    status = get_and_wait(
+        profile, region, jenkins_instance, command["Command"]["CommandId"], sleep
+    )
+    if status != "Success":
+        log.error("Failed to send document, final status: ", status)
+        exit(1)
+
+
+if send_document:
+    send_document_procedure()
+
 
 sleep.sleep(10, "{{symbol}} Get jenkins url in {{time_desc}} seconds")
 print(f"\r{' '* 31}")
