@@ -1,0 +1,109 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: EC2  with key Template
+
+Parameters:
+    Name:
+        Type: String
+        Description: Name of project
+    AmiId:
+        Type: AWS::EC2::Image::Id
+        Default: ami-0900fe555666598a2
+    InstanceType:
+        Type: String
+        Default: t2.micro
+    VpcId:
+        Type: AWS::EC2::VPC::Id
+    SubnetId:
+        Type: AWS::EC2::Subnet::Id
+    Ip:
+        Type: String
+        Description: IP address for security group
+    PublicKey:
+        Type: String
+        Description: SSH Key for connect with ec2
+        NoEcho: true
+
+Resources:
+    SecurityGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupName: !Sub ${Name}SG
+            GroupDescription: Enable TCP access via port 22, 80 and 443
+            VpcId: !Ref VpcId
+            SecurityGroupIngress:
+              - CidrIp: !Sub "${Ip}/32"
+                FromPort: 22
+                IpProtocol: tcp
+                ToPort: 22
+              - CidrIp: 0.0.0.0/0
+                FromPort: 80
+                IpProtocol: tcp
+                ToPort: 80
+              - CidrIp: !Sub "${Ip}/32"
+                FromPort: 443
+                IpProtocol: tcp
+                ToPort: 443
+
+    Key:
+        Type: "AWS::EC2::KeyPair"
+        Properties:
+            KeyName: !Sub ${Name}Key
+            KeyType: rsa
+            PublicKeyMaterial: !Ref PublicKey
+            Tags:
+              - Key: Name
+                Value: !Sub "${Name}-key"
+
+    Role:
+        Type: 'AWS::IAM::Role'
+        Properties:
+            RoleName: !Sub ${Name}Role
+            AssumeRolePolicyDocument:
+                Version: '2012-10-17'
+                Statement:
+                  - Effect: Allow
+                    Principal:
+                        Service: ec2.amazonaws.com
+                    Action: sts:AssumeRole
+            Path: /
+            ManagedPolicyArns:
+              - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+
+    InstanceProfile:
+        Type: "AWS::IAM::InstanceProfile"
+        Properties:
+            InstanceProfileName: !Sub ${Name}InstanceProfile
+            Path: "/"
+            Roles:
+              - !Ref Role
+
+
+    EC2:
+        Type: AWS::EC2::Instance
+        Properties:
+            ImageId: !Ref AmiId
+            InstanceType: !Ref InstanceType
+            NetworkInterfaces:
+              - DeviceIndex: "0"
+                GroupSet:
+                  - !Ref SecurityGroup
+                SubnetId: !Ref SubnetId
+            KeyName: !Ref Key
+            IamInstanceProfile: !Ref InstanceProfile
+            Tags:
+              - Key: Name
+                Value: !Ref Name
+            UserData: !Base64
+                "Fn::Sub": "#!/bin/bash\nsudo dnf update -y \nsudo dnf install docker -y\nsudo service docker start\nsudo usermod -a -G docker ec2-user\nsudo chkconfig docker on\nsudo dnf  install -y git\nsudo curl -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose\nsudo chmod +x /usr/local/bin/docker-compose\nsudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose\nsudo git config --global credential.helper '!aws codecommit credential-helper $@'\nsudo git config --global credential.UseHttpPath true\n  #magic___^_^___line\n  #magic___^_^___line\n"
+Outputs:
+    InstanceDns:
+        Description: EC2 Public DNS
+        Value: !GetAtt EC2.PublicDnsName
+        Export:
+            Name: !Sub ${Name}Dns
+
+    InstanceID:
+        Description: EC2 instance id
+        Value: !Ref EC2
+        Export:
+            Name: !Sub ${Name}InstanceId

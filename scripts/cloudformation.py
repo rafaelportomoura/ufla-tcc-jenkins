@@ -170,7 +170,7 @@ class CloudFormation:
                 if parameters[key] == None or parameters[key] == "":
                     continue
 
-                params += f" '{key}={parameters[key]}'"
+                params += f" {key}='{parameters[key]}'"
             if params != "--parameter-overrides":
                 cmd += f" {params}"
         return self.__prefix(cmd)

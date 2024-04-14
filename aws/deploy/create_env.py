@@ -29,14 +29,19 @@ log_level = int(sys.argv[9], base=10) if len(sys.argv) > 9 else 3
 log = Log(log_level=log_level)
 sleep = Sleep(log)
 cloudformation = CloudFormation(profile, region, log_level)
-if clone == False and sys.argv[1].lower() in [
-    "notsend",
-    "nosend",
-    "not_send",
-    "no_send",
-    "not send",
-    "no send",
-]:
+if (
+    clone == False
+    and len(sys.argv) > 1
+    and sys.argv[1].lower()
+    in [
+        "notsend",
+        "nosend",
+        "not_send",
+        "no_send",
+        "not send",
+        "no send",
+    ]
+):
     clone = False
     send_document = False
 elif clone == False:
@@ -56,7 +61,7 @@ cloudformation.deploy_stack(stack=document())
 
 
 def send_document_procedure():
-    log.checkpoint("Send Document to Jenkins instance")
+    log.checkpoint("Send Document to instance")
     document_name = get_document(cloudformation)
     jenkins_instance = get_jenkins_instance(tenant, cloudformation)
     command = send_command(
@@ -67,16 +72,9 @@ def send_document_procedure():
         profile, region, jenkins_instance, command["Command"]["CommandId"], sleep
     )
     if status != "Success":
-        log.error("Failed to send document, final status: ", status)
+        log.error("\rFailed to send document, final status: ", status)
         exit(1)
 
 
 if send_document:
     send_document_procedure()
-
-
-sleep.sleep(10, "{{symbol}} Get jenkins url in {{time_desc}} seconds")
-print(f"\r{' '* 31}")
-url = get_jenkins_url(tenant, cloudformation)
-log.checkpoint(f"Opening in browser with {url}")
-os.system(f"xdg-open {url} &> /dev/null")

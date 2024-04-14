@@ -56,6 +56,7 @@ job('Config/nodejs') {
     }
     steps {
         shell("""
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash 
             . \$HOME/.nvm/nvm.sh 
             nvm install \$NODE_VERSION 
             nvm use \$NODE_VERSION

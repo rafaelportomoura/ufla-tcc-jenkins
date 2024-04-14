@@ -9,9 +9,6 @@ Parameters:
     GitRepositoryBranch:
         Type: String
         Default: main
-    ContainerName:
-        Type: String
-        Default: rafaelportomoura/jenkins:latest
     GitEmail:
         Type: String
         Default: jenkins@jenkins.jenkins
@@ -22,7 +19,7 @@ Resources:
     Document:
         Type: AWS::SSM::Document
         Properties:
-            Name: jenkins-document
+            Name: clone-or-update-repository
             TargetType: /AWS::EC2::Instance
             DocumentType: Command
             Content:
@@ -38,9 +35,6 @@ Resources:
                     RepositoryMainBranch:
                         type: String
                         default: !Ref GitRepositoryBranch
-                    ContainerName:
-                        type: String
-                        default: !Ref ContainerName
                     GitEmail:
                         type: String
                         default: !Ref GitEmail
@@ -83,13 +77,6 @@ Resources:
                         runCommand:
                           - "cd {{ RepositoryPathOnEC2 }}"
                           - git pull origin {{ RepositoryMainBranch }}
-
-                  - action: aws:runShellScript
-                    name: upContainer
-                    inputs:
-                        runCommand:
-                          - "cd {{ RepositoryPathOnEC2 }}"
-                          - docker-compose up -d --build
             Tags:
               - Key: Service
                 Value: SSM
@@ -109,4 +96,4 @@ Outputs:
         Description: The name of the SSM document
         Value: !Ref Document
         Export:
-            Name: jenkins-document
+            Name: clone-or-update-repository

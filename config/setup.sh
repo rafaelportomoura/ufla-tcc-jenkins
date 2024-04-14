@@ -3,7 +3,7 @@
 repository=${1-"/var/repositories/ufla-tcc-jenkins"}
 casc=${2-"/var/jenkins_home/casc_configs"}
 
-sudo wget -O /etc/yum.repos.d/jenkins.repo \
+sudo wget --quiet -O /etc/yum.repos.d/jenkins.repo \
   https://pkg.jenkins.io/redhat-stable/jenkins.repo
 sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
 sudo dnf update –y --quiet && sudo dnf upgrade -y --quiet
@@ -17,7 +17,7 @@ sudo dnf install -y --quiet java-17-amazon-corretto-devel \
 sudo dnf groupinstall "Development Tools" -y --quiet
 echo "INSTALLED DEPENDENCIES"
 sudo mkdir /var/jenkins_home
-chmod 777 /var/jenkins_home/
+sudo chmod 777 /var/jenkins_home/
 sudo mkdir -p $casc
 cp $repository/config/jcasc.yaml $casc
 sudo mkdir -p /usr/share/jenkins/ref/init.groovy.d

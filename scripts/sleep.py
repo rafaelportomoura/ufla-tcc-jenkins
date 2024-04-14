@@ -7,13 +7,15 @@ class Sleep:
         self.log = log
         self.symbol = symbols if symbols else ["⣾", "⣷", "⣯", "⣟", "⡿", "⢿", "⣻", "⣽"]
 
-    def sleep(self, seconds: int, message: str, erase_len: int = 100) -> None:
+    def sleep(
+        self, seconds: int, message: str, erase_len: int = 100, up_cursor: int = -1
+    ) -> None:
         for _ in range(seconds):
             msg = message.replace("{{symbol}}", self.symbol[_ % len(self.symbol)])
             msg = msg.replace("{{time_asc}}", str(_))
             msg = msg.replace("{{time_desc}}", str(seconds - _))
             self.log.verbose(
-                "\r" + msg,
+                f"\033[{up_cursor}A\r" + msg,
                 end="",
                 flush=True,
             )
