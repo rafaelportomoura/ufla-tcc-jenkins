@@ -16,7 +16,7 @@ job("${entrypoint_folder}/prod") {
     scm {
         git {
             remote {
-                url("${codecommit}/${repo}")
+                url("${codecommit}/ufla-tcc-jenkins")
             }
             branch(branch)
         }
