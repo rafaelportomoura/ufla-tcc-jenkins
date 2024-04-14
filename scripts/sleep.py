@@ -15,9 +15,11 @@ class Sleep:
             msg = msg.replace("{{time_asc}}", str(_))
             msg = msg.replace("{{time_desc}}", str(seconds - _))
             self.log.verbose(
-                f"\033[{up_cursor}A\r" + msg,
+                f"\r{msg}",
                 end="",
                 flush=True,
             )
             time.sleep(1)
-            self.log.verbose("\r" + " " * erase_len + "\r", end="", flush=True)
+            self.log.verbose(
+                f"\033[{up_cursor}A\r" + " " * erase_len + "\r", end="", flush=True
+            )

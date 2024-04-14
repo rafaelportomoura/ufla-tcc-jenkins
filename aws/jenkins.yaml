@@ -129,7 +129,7 @@ Resources:
                     VolumeType: "io1"
                     Iops: 200
                     DeleteOnTermination: true
-                    VolumeSize: !Sub VolumeSize
+                    VolumeSize: !Ref VolumeSize
               - DeviceName: "/dev/sdk"
                 NoDevice: {}
             Tags:

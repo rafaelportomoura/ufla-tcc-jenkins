@@ -59,28 +59,44 @@ class CloudFormation:
         except Exception:
             return True, None
 
-    def wait_stack_delete(self, stack_name: str, max_retries_seg=1800) -> bool:
-        if max_retries_seg <= 0:
-            return False
-        elif max_retries_seg == 1800:
-            self.log.checkpoint(f"Waiting for {stack_name} to be deleted")
+    def check_if_is_deleted(self, stack_name: str) -> str:
         is_deleted, status = self.check_if_stack_is_deleted(stack_name=stack_name)
 
         if is_deleted:
             self.log.info(f"\nStack {stack_name} has been deleted")
-            return True
+            return "DELETE_COMPLETE"
 
-        sleep = 10
-
-        if status == "UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS":
-            sleep = 60
-        elif status == "UPDATE_ROLLBACK_COMPLETE":
+        if status == "UPDATE_ROLLBACK_COMPLETE":
             cmd = self.delete_stack(stack_name)
             os.system(f"{cmd} &> /dev/null")
-            sleep = 30
 
-        self.sleep.sleep(sleep, status + ": {{symbol}} ({{time_desc}} seg)")
-        return self.wait_stack_delete(stack_name, max_retries_seg - sleep)
+        return status
+
+    def wait_stacks_delete(self, stacks: list[str], max_retries_seg=1800) -> str:
+        if max_retries_seg <= 0:
+            return f"EXCEEDED_MAX_RETRIES: {' '.join(stacks)}"
+
+        stack_statuses = ""
+        max_erase_len = 0
+        queue = stacks.copy()
+        for stack in queue:
+            status = self.check_if_is_deleted(stack)
+            msg_status = f"{stack}: {status}\n"
+            stack_statuses += msg_status
+            if status == "DELETE_COMPLETE":
+                print(f"✅ {msg_status}")
+                stacks.remove(stack)
+            if len(msg_status) > max_erase_len:
+                max_erase_len = len(msg_status)
+        if len(stacks) == 0:
+            return "ALL_STACKS_DELETED"
+        self.sleep.sleep(
+            seconds=10,
+            message=stack_statuses,
+            erase_len=max_erase_len,
+            up_cursor=len(queue) + 1,
+        )
+        return self.wait_stacks_delete(stacks, max_retries_seg - 10)
 
     def package(self, template: str) -> str:
         output = "output.yaml"

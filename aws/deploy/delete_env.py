@@ -29,5 +29,4 @@ for stack in stacks:
     cloudformation.delete_stack(stack_name)
     waiting_stacks.append(stack_name)
 
-for stack in waiting_stacks:
-    cloudformation.wait_stack_delete(stack)
+cloudformation.wait_stacks_delete(waiting_stacks)
