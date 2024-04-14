@@ -48,7 +48,10 @@ job('Tcc/entrypoint') {
         }
     }
 }
-
+folder('Config') {
+    displayName('Config')
+}
+    
 
 job('Config/nodejs') {
     parameters{
