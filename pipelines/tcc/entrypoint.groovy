@@ -29,7 +29,6 @@ job("${entrypoint_folder}/prod") {
             external("${pipelines_path}/prod.groovy")
             removeAction('DELETE')
             removeViewAction('DELETE')
-            remove
         }
     }
     publishers {
