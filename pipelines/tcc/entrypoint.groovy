@@ -11,7 +11,7 @@ folder('tcc/Prod') {
     displayName('Prod')
 }
 def scmConfig(String repo) {
-    scm {
+    job.scm {
         git {
             remote {
                 url("${codecommit}/${repo}")
