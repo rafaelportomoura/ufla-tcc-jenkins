@@ -10,8 +10,10 @@ folder('tcc') {
 folder('tcc/Prod') {
     displayName('Prod')
 }
-def scmConfig(String repo) {
-    job.scm {
+
+
+job("${entrypoint_folder}/prod") {
+    scm {
         git {
             remote {
                 url("${codecommit}/${repo}")
@@ -19,10 +21,6 @@ def scmConfig(String repo) {
             branch(branch)
         }
     }
-}
-
-job("${entrypoint_folder}/prod") {
-    scmConfig("ufla-tcc-jenkins")
     triggers {
         scm(scm_cron)
     }
