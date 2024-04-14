@@ -1,7 +1,6 @@
 #!/bin/bash
 
 repository=${1-"/var/repositories/ufla-tcc-jenkins"}
-casc=${2-"/var/jenkins_home/casc_configs"}
 
 sudo wget --quiet -O /etc/yum.repos.d/jenkins.repo \
   https://pkg.jenkins.io/redhat-stable/jenkins.repo
@@ -16,18 +15,11 @@ sudo dnf install -y --quiet java-17-amazon-corretto-devel \
   kernel-devel
 sudo dnf groupinstall "Development Tools" -y --quiet
 echo "INSTALLED DEPENDENCIES"
-sudo mkdir /var/jenkins_home
-sudo chmod 777 /var/jenkins_home/
-sudo mkdir -p $casc
-cp $repository/config/jcasc.yaml $casc
-sudo mkdir -p /usr/share/jenkins/ref/init.groovy.d
-cp $repository/config/init.groovy.d/* /var/lib/jenkins/init.groovy.d/
-echo "MOVED CONFIG FILES"
-export JAVA_OPTS="-Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=$casc"
 sudo systemctl daemon-reload
 sudo systemctl enable jenkins
 sudo chkconfig jenkins on
 sudo systemctl start jenkins
 echo "JENKINS STARTED"
-jenkins-plugin-cli -f $repository/config/plugins.txt
+git config --global --add safe.directory $repository
+sudo chmod 777 --recursive $repository/.git
 sudo echo \"fim do script de setup\" >>/var/chegou_ao_fim.txt
