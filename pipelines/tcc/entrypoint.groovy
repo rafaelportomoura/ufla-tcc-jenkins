@@ -1,5 +1,5 @@
 String pipelines_path = 'pipelines/tcc'
-String codecommit ="https://git-codecommit.us-east-2.amazonaws.com/v1/repos"
+String codecommit="https://git-codecommit.us-east-2.amazonaws.com/v1/repos"
 String branch = "*/main"
 String scm_cron = "H/05 * * * *"
 String entrypoint_folder ="entrypoints/tcc"
@@ -10,14 +10,17 @@ folder('tcc') {
 folder('tcc/Prod') {
     displayName('Prod')
 }
-
-job("${entrypoint_folder}/prod") {
-    scm {
+def scmConfig(String repo) {
+    git {
         remote {
-            url("${codecommit}/ufla-tcc-jenkins")
+            url("${codecommit}/${repo}")
         }
         branch(branch)
     }
+}
+
+job("${entrypoint_folder}/prod") {
+    scmConfig("ufla-tcc-jenkins")
     triggers {
         scm(scm_cron)
     }
@@ -26,6 +29,7 @@ job("${entrypoint_folder}/prod") {
             external("${pipelines_path}/prod.groovy")
             removeAction('DELETE')
             removeViewAction('DELETE')
+            remove
         }
     }
     publishers {
