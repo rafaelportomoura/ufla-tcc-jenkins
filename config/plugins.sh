@@ -11,7 +11,7 @@ fi
 install_plugin() {
   plugin=$1
   echo "Installing plugin $plugin"
-  java -jar $cli -s $dns install-plugin $plugin
+  java -jar $cli -auth $auth -s $dns install-plugin $plugin
 }
 
 while IFS= read -r line; do
