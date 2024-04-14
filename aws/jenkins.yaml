@@ -17,6 +17,10 @@ Parameters:
         Type: String
         Description: SSH Key for connect with ec2
         NoEcho: true
+    VolumeSize:
+        Type: Number
+        MinValue: 1
+        Description: Volume size in GB
 
 Resources:
     JenkinsInstanceProfile:
@@ -125,7 +129,7 @@ Resources:
                     VolumeType: "io1"
                     Iops: 200
                     DeleteOnTermination: true
-                    VolumeSize: 20
+                    VolumeSize: !Sub VolumeSize
               - DeviceName: "/dev/sdk"
                 NoDevice: {}
             Tags:

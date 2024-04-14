@@ -49,8 +49,9 @@ def jenkins(
     tenant: str,
     vpc: str,
     subnet: str,
-    amiid: str = "",
-    instance_type: str = "",
+    volume_size: int,
+    amiid: str,
+    instance_type: str,
 ) -> stacks.Stack:
     key = generate_key()
     return stacks.Stack(
@@ -62,6 +63,7 @@ def jenkins(
             "AmiId": amiid,
             "InstanceType": instance_type,
             "Tenant": tenant,
+            "VolumeSize": volume_size,
             "SgInitIp": os.popen("curl --silent https://api.ipify.org").read(),
             "PublicKey": key["public_key"],
         },

@@ -70,7 +70,6 @@ Resources:
                     inputs:
                         runCommand:
                           - "git clone {{ RepositoryCloneUrl }}  {{ RepositoryPathOnEC2 }}"
-                          - "git config --global --add safe.directory {{ RepositoryPathOnEC2 }}"
                   - action: aws:runShellScript
                     name: updatesGitRepository
                     inputs:
