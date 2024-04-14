@@ -1,5 +1,6 @@
 String pipelines_path = 'pipelines/tcc'
 
+
 def scmConfig(
     String repo = 'https://git-codecommit.us-east-2.amazonaws.com/v1/repos/ufla-tcc-jenkins',
     String branch='main'
@@ -44,8 +45,8 @@ def publisherConfig() {
 }
 
 job('Config/nodejs') {
-    triggerConfig()
-    scmConfig()
+    $triggerConfig()
+    $scmConfig()
     steps {
         dsl {
             external("${pipelines_path}/dev.groovy")
@@ -53,5 +54,5 @@ job('Config/nodejs') {
             removeViewAction('DELETE')
         }
     }
-    publisherConfig()
+    $publisherConfig()
 }
