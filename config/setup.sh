@@ -10,8 +10,6 @@ sudo dnf update –y --quiet && sudo dnf upgrade -y --quiet
 sudo dnf install -y --quiet java-17-amazon-corretto-devel \
   fontconfig \
   jenkins \
-  wget \
-  curl \
   unzip \
   python3-pip \
   python3-devel \
@@ -32,4 +30,4 @@ sudo chkconfig jenkins on
 sudo systemctl start jenkins
 echo "JENKINS STARTED"
 jenkins-plugin-cli -f $repository/config/plugins.txt
-echo \"fim do script de setup\" >>/var/chegou_ao_fim.txt
+sudo echo \"fim do script de setup\" >>/var/chegou_ao_fim.txt
