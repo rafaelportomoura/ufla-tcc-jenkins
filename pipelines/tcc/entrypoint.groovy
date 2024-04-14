@@ -11,11 +11,13 @@ folder('tcc/Prod') {
     displayName('Prod')
 }
 def scmConfig(String repo) {
-    git {
-        remote {
-            url("${codecommit}/${repo}")
+    scm {
+        git {
+            remote {
+                url("${codecommit}/${repo}")
+            }
+            branch(branch)
         }
-        branch(branch)
     }
 }
 
