@@ -1,6 +1,6 @@
 String pipelines_path = 'pipelines/tcc'
 String codecommit ="https://git-codecommit.us-east-2.amazonaws.com/v1/repos"
-String branch = "main"
+String branch = "*/main"
 String scm_cron = "H/05 * * * *"
 String entrypoint_folder ="entrypoints/tcc"
 
@@ -16,10 +16,10 @@ job("${entrypoint_folder}/prod") {
         remote {
             url("${codecommit}/ufla-tcc-jenkins")
         }
-        branch('main')
+        branch(branch)
     }
     triggers {
-        scm(getAt(scm_cron))
+        scm(scm_cron)
     }
     steps {
         dsl {
