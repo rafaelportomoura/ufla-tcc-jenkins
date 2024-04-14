@@ -1,25 +1,24 @@
 String pipelines_path = 'pipelines/tcc'
-
-
-def scmConfig(
-    String repo = 'https://git-codecommit.us-east-2.amazonaws.com/v1/repos/ufla-tcc-jenkins',
-    String branch='main'
-) {
+String codecommit ="https://git-codecommit.us-east-2.amazonaws.com/v1/repos"
+String branch = "main"
+String scm_cron = "H/05 * * * *"
+job('Config/nodejs') {
     scm {
         remote {
-            url(repo)
+            url("${codecommit}/ufla-tcc-jenkins")
         }
         branch('main')
     }
-}
-
-def triggerConfig() {
     triggers {
-        scm('H/05 * * * *')
+        scm(scm_cron)
     }
-}
-
-def publisherConfig() {
+    steps {
+        dsl {
+            external("${pipelines_path}/prod.groovy")
+            removeAction('DELETE')
+            removeViewAction('DELETE')
+        }
+    }
     publishers {
         cleanWs {
             cleanWhenAborted(true)
@@ -42,17 +41,4 @@ def publisherConfig() {
             }
         }
     }
-}
-
-job('Config/nodejs') {
-    $triggerConfig()
-    $scmConfig()
-    steps {
-        dsl {
-            external("${pipelines_path}/dev.groovy")
-            removeAction('DELETE')
-            removeViewAction('DELETE')
-        }
-    }
-    $publisherConfig()
 }
