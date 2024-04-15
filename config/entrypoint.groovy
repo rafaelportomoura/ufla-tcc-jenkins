@@ -80,7 +80,7 @@ job('Config/git') {
     }
 }
 
-job('Config/git') {
+job('Config/git_pull') {
     parameters{
         stringParam('REPO_PATH', '/var/repositories/ufla-tcc-jenkins')
         stringParam('BRANCH', 'main')
