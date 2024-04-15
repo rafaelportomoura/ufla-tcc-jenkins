@@ -44,7 +44,7 @@ job("${job_folder}/infra") {
 
     steps {
         shell("""
-        cp $jenkins_scripts \$SCRIPT_PATH/utils -r
+        cp $jenkins_scripts \$SCRIPT_PATH/scripts -r
         python3 \$ENTRYPOINT stage=$stage tenant=$tenant region=$region profile=$profile
         """)
     }
@@ -58,16 +58,6 @@ job("${job_folder}/infra") {
             deleteDirs(true)
             notFailBuild(true)
             disableDeferredWipeout(true)
-            patterns {
-                pattern {
-                    type('EXCLUDE')
-                    pattern('.propsfile')
-                }
-                pattern {
-                    type('INCLUDE')
-                    pattern('.gitignore')
-                }
-            }
         }
     }
 }
