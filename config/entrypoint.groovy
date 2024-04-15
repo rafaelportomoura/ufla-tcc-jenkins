@@ -90,6 +90,7 @@ job('Config/git_pull') {
     }
     steps {
         shell("""
+            git config --global --add safe.directory /var/repositories/ufla-tcc-jenkins
             cd \$REPO_PATH
             git checkout \$BRANCH
             git pull
