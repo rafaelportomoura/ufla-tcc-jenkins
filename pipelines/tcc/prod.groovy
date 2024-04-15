@@ -135,3 +135,44 @@ job("${job_folder}/domain") {
         }
     }
 }
+
+job("${job_folder}/certifcate") {
+    disabled(env_disable_pipes)
+    scm {
+        git {
+            remote {
+                url("${codecommit}/ufla-tcc-infra")
+            }
+        }
+    }
+  wrappers {
+        colorizeOutput('xterm')
+        preBuildCleanup {
+            deleteDirectories()
+            cleanupParameter('CLEANUP')
+        }
+    }
+
+    steps {
+        shell("""
+        cp $jenkins_scripts scripts/scripts -r
+        ARGS="stage=$stage tenant=$tenant region=$region profile=$profile"
+        $python_version scripts/create_certificate.py \$ARGS
+        """)
+    }
+    publishers {
+        cleanWs {
+            cleanWhenAborted(true)
+            cleanWhenFailure(true)
+            cleanWhenNotBuilt(false)
+            cleanWhenSuccess(true)
+            cleanWhenUnstable(true)
+            deleteDirs(true)
+            notFailBuild(true)
+            disableDeferredWipeout(true)
+        }
+    }
+}
+
+
+
