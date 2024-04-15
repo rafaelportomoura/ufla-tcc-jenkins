@@ -42,7 +42,11 @@ job("${job_folder}/infra") {
     steps {
         shell("""
         cp $jenkins_scripts scripts/scripts -r
-        $python_version scripts/deploy.py stage=$stage tenant=$tenant region=$region profile=$profile python=$python_version
+        ARGS="stage=$stage tenant=$tenant region=$region profile=$profile"
+        $python_version scripts/deploy.py $ARGS
+        $python_version scripts/create_vpc $ARGS
+        $python_version scripts/create_network $ARGS
+        $python_version scripts/create_domain $ARGS
         """)
     }
     publishers {
