@@ -7,10 +7,6 @@ String entrypoint_folder ="entrypoints/tcc"
 folder('tcc') {
     displayName('Tcc')
 }
-folder('tcc/Prod') {
-    displayName('Prod')
-}
-
 
 job("${entrypoint_folder}/prod") {
     scm {

@@ -79,3 +79,20 @@ job('Config/git') {
         """)
     }
 }
+
+job('Config/git') {
+    parameters{
+        stringParam('REPO_PATH', '/var/repositories/ufla-tcc-jenkins')
+        stringParam('BRANCH', 'main')
+    }
+    triggers{
+        cron('H/05 * * * *')
+    }
+    steps {
+        shell("""
+            cd $REPO_PATH
+            git checkout main
+            git pull
+        """)
+    }
+}
