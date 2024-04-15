@@ -1,0 +1,6 @@
+ansicolor
+simple-build-for-pipeline
+simple-queue
+ws-cleanup
+purge-build-queue-plugin
+job-dsl
