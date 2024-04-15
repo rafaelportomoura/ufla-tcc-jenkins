@@ -71,7 +71,7 @@ job("${job_folder}/infra") {
     disabled(env_disable_pipes)
     parameters {
         stringParam('SCRIPT_PATH', 'scripts', 'Script path')
-        stringParam('ENTRYPOINT', 'scripts/create_vpc.py', 'Entrypoint')
+        stringParam('ENTRYPOINT', 'scripts/deploy.py', 'Entrypoint')
     }
     scm {
         git {
@@ -90,65 +90,7 @@ job("${job_folder}/infra") {
     steps {
         shell("""
         cp $jenkins_scripts \$SCRIPT_PATH/utils -r
-        python3 $ENTRYPOINT
-        """)
-    }
-    publishers {
-        cleanWs {
-            cleanWhenAborted(true)
-            cleanWhenFailure(true)
-            cleanWhenNotBuilt(false)
-            cleanWhenSuccess(true)
-            cleanWhenUnstable(true)
-            deleteDirs(true)
-            notFailBuild(true)
-            disableDeferredWipeout(true)
-            patterns {
-                pattern {
-                    type('EXCLUDE')
-                    pattern('.propsfile')
-                }
-                pattern {
-                    type('INCLUDE')
-                    pattern('.gitignore')
-                }
-            }
-        }
-    }
-}
-
-
-
-job("${job_folder}/nat_gateway") {
-    disabled(env_disable_pipes)
-    parameters {
-        stringParam('NatName', 'NatGateway')
-        choices('AvailabilityZone', choices: ['0', '1'] )
-        stringParam('EIPAllocationId', 'false')
-
-    }
-    scm {
-        git {
-            remote {
-                url("${codecommit}/ufla-tcc-infra")
-            }
-        }
-    }
-  wrappers {
-        preBuildCleanup {
-            deleteDirectories()
-            cleanupParameter('CLEANUP')
-        }
-    }
-    steps {
-        shell("""
-STACK_NAME="${stack_tenant}-${stack_stage}-NatGateway-\$NatName"
-PARAMETERS="Stage=$stage \
-Tenant=$tenant \
-NatName=\$NatName \
-AvailabilityZone=\$AvailabilityZone \
-EIPAllocationId=\$EIPAllocationId"
-$deploy --template-file aws/vpc/nat_gateway.yaml --stack-name $STACK_NAME --parameter-overrides $PARAMETERS
+        python3 $ENTRYPOINT stage=$stage tenant=$tenant region=$region profile=$profile
         """)
     }
     publishers {
