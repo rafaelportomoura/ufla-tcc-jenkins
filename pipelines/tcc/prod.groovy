@@ -22,51 +22,6 @@ folder(job_folder) {
     displayName(stack_stage)
 }
 
-job("${job_folder}/package-bucket") {
-    disabled(env_disable_pipes)
-    scm {
-        git {
-            remote {
-                url("${codecommit}/ufla-tcc-infra")
-            }
-        }
-    }
-  wrappers {
-        preBuildCleanup {
-            deleteDirectories()
-            cleanupParameter('CLEANUP')
-        }
-    }
-    steps {
-        shell("""
-STACK_NAME="${stack_tenant}-${stack_stage}-Package-Bucket"
-$deploy --template-file aws/s3/package_bucket.yaml --stack-name $STACK_NAME
-        """)
-    }
-    publishers {
-        cleanWs {
-            cleanWhenAborted(true)
-            cleanWhenFailure(true)
-            cleanWhenNotBuilt(false)
-            cleanWhenSuccess(true)
-            cleanWhenUnstable(true)
-            deleteDirs(true)
-            notFailBuild(true)
-            disableDeferredWipeout(true)
-            patterns {
-                pattern {
-                    type('EXCLUDE')
-                    pattern('.propsfile')
-                }
-                pattern {
-                    type('INCLUDE')
-                    pattern('.gitignore')
-                }
-            }
-        }
-    }
-}
-
 job("${job_folder}/infra") {
     disabled(env_disable_pipes)
     parameters {
