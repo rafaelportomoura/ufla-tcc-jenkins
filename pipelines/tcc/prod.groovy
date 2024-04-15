@@ -96,6 +96,7 @@ job("${job_folder}/network") {
             disableDeferredWipeout(true)
         }
     }
+}
 
 job("${job_folder}/domain") {
     disabled(env_disable_pipes)
