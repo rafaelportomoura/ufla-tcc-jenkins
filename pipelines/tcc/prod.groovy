@@ -45,7 +45,7 @@ job("${job_folder}/infra") {
     steps {
         shell("""
         cp $jenkins_scripts \$SCRIPT_PATH/utils -r
-        python3 $ENTRYPOINT stage=$stage tenant=$tenant region=$region profile=$profile
+        python3 \$ENTRYPOINT stage=$stage tenant=$tenant region=$region profile=$profile
         """)
     }
     publishers {
