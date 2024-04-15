@@ -86,26 +86,17 @@ class CloudFormation:
         if max_retries_seg <= 0:
             return f"EXCEEDED_MAX_RETRIES: {' '.join(stacks)}"
 
-        stack_statuses = ""
-        max_erase_len = 0
         queue = stacks.copy()
         for stack in queue:
             status = self.check_if_is_deleted(stack)
-            msg_status = f"{stack}: {status}\n"
-            stack_statuses += msg_status
             if status == "DELETE_COMPLETE":
+                msg_status = f"{stack}: {status}"
                 print(f"✅ {msg_status}")
                 stacks.remove(stack)
-            if len(msg_status) > max_erase_len:
-                max_erase_len = len(msg_status)
         if len(stacks) == 0:
             return "ALL_STACKS_DELETED"
-        self.sleep.sleep(
-            seconds=10,
-            message=stack_statuses,
-            erase_len=max_erase_len,
-            up_cursor=len(queue) + 1,
-        )
+        message = f"Has {len(stacks)} in delete process"
+        self.sleep.sleep(seconds=10, message=message, erase_len=len(message) + 30)
         return self.wait_stacks_delete(stacks, max_retries_seg - 10)
 
     def package(self, template: str) -> str:
