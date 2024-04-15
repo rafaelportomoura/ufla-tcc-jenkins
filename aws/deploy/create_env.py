@@ -20,7 +20,7 @@ clone = sys.argv[1].lower() == "true" if len(sys.argv) > 1 else new_environment
 log_level = int(sys.argv[9], base=10) if len(sys.argv) > 2 else 3
 vpc = "vpc-0826717742c251f0f"
 subnet = "subnet-0bc9e41ccc407a504"
-amiid = "ami-022661f8a4a1b91cf"
+amiid = "ami-0900fe555666598a2"
 volume_size = 50
 instance_type = "t2.medium"
 tenant = "tcc"

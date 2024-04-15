@@ -163,9 +163,12 @@ class CloudFormation:
         os.system(f"cfn-lint {template}")
 
     def __prefix(self, cmd) -> str:
-        return (
-            f"aws --profile {self.profile} --region {self.region} cloudformation {cmd}"
+        profile = (
+            f"--profile {self.profile}"
+            if self.profile or self.profile != "default"
+            else ""
         )
+        return f"aws {profile} --region {self.region} cloudformation {cmd}"
 
     def __list_stacks(self, filter: list[str] = None):
         status_filter = ""

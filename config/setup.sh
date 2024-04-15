@@ -14,7 +14,8 @@ sudo dnf install -y --quiet java-17-amazon-corretto-devel \
   python3-devel \
   kernel-devel \
   bzip2-devel \
-  libffi-devel
+  libffi-devel \
+  openssl-devel
 sudo dnf groupinstall "Development Tools" -y --quiet
 echo "INSTALLED DEPENDENCIES"
 sudo systemctl daemon-reload
@@ -26,14 +27,3 @@ git config --global --add safe.directory $repository
 sudo chmod 777 --recursive $repository/.git
 sudo chown -R jenkins:jenkins $repository
 sudo echo \"fim do script de setup\" >>/var/chegou_ao_fim.txt
-
-sudo cd /tmp
-sudo wget --quiet https://www.python.org/ftp/python/3.10.12/Python-3.10.12.tgz
-sudo tar -xzf Python-3.10.12.tgz
-cd Python-3.10.12
-./configure --enable-optimizations --prefix=/usr/local
-make -j 2
-sudo make altinstall
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python3.10 get-pip.py
-sudo echo \"fim do script de python\" >>/var/chegou_ao_fim.txt
