@@ -41,6 +41,16 @@ class CloudFormation:
         self.log.cmd(cmd)
         os.system(f"{cmd} &> /dev/null")
 
+    def get_stack_status(self, stack_name: str) -> str:
+        stack = self.describe(stack_name)
+        if "Stacks" not in stack or len(stack["Stacks"]) == 0:
+            return "DELETE_COMPLETE"
+        return stack["Stacks"][0]["StackStatus"]
+
+    def stack_is_succesfully_deployed(self, stack_name: str) -> bool:
+        status = self.get_stack_status(stack_name)
+        return status == "CREATE_COMPLETE" or status == "UPDATE_COMPLETE"
+
     def check_if_stack_is_deleted(self, stack_name: str) -> tuple[bool, str]:
         DELETE_FINAL_STATUS = ["DELETE_COMPLETE"]
         try:
