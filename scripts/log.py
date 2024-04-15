@@ -10,23 +10,23 @@ class Log:
     def beautify(self, ansi, string) -> str:
         return f"{ansi}{string}{Log.RESET}"
 
-    def error(self, *args, end="\n", flush=False) -> None:
+    def error(self, *args, end="\n", flush=True) -> None:
         if self.log_level >= 0:
             self.__out("❌", *args, ansi=Log.RED, end=end, flush=flush)
 
-    def checkpoint(self, *args, end="\n", flush=False) -> None:
+    def checkpoint(self, *args, end="\n", flush=True) -> None:
         if self.log_level >= 1:
             self.__out("🚀", *args, ansi=Log.CYAN, end=end, flush=flush)
 
-    def info(self, *args, ansi=None, end="\n", flush=False) -> None:
+    def info(self, *args, ansi=None, end="\n", flush=True) -> None:
         if self.log_level >= 2:
             self.__out(*args, ansi=ansi, end=end, flush=flush)
 
-    def cmd(self, *args, end="\n", flush=False) -> None:
+    def cmd(self, *args, end="\n", flush=True) -> None:
         if self.log_level >= 3:
             self.__out("$", *args, ansi=Log.GRAY, end=end, flush=flush)
 
-    def verbose(self, *args, ansi=None, end="\n", flush=False) -> None:
+    def verbose(self, *args, ansi=None, end="\n", flush=True) -> None:
         if self.log_level >= 3:
             self.__out(*args, ansi=ansi, end=end, flush=flush)
 
