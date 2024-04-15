@@ -22,4 +22,5 @@ sudo systemctl start jenkins
 echo "JENKINS STARTED"
 git config --global --add safe.directory $repository
 sudo chmod 777 --recursive $repository/.git
+sudo chown -R jenkins:jenkins $repository
 sudo echo \"fim do script de setup\" >>/var/chegou_ao_fim.txt
