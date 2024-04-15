@@ -165,7 +165,7 @@ class CloudFormation:
     def __prefix(self, cmd) -> str:
         profile = (
             f"--profile {self.profile}"
-            if self.profile or self.profile != "default"
+            if self.profile and self.profile != "default"
             else ""
         )
         return f"aws {profile} --region {self.region} cloudformation {cmd}"
