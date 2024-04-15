@@ -1,4 +1,5 @@
 import sys
+from typing import Union, List
 
 boolean_arg = lambda a, x: a.startswith(f"--{x}")
 string_arg = lambda a, x: a.startswith(f"{x}=")
@@ -25,7 +26,9 @@ def get_args(params: dict) -> dict:
     return response
 
 
-def get_param(param: str, ty: str) -> str | int | float | bool | None | list[str]:
+def get_param(
+    param: str, ty: str
+) -> Union[str | int | float | bool | None | List[str]]:
     for arg in sys.argv[1:]:
         if arg.startswith(f"{param}="):
             response = arg.split("=")[1]
