@@ -43,7 +43,7 @@ job("${job_folder}/vpc") {
         shell("""
         cp $jenkins_scripts scripts/scripts -r
         ARGS="stage=$stage tenant=$tenant region=$region profile=$profile"
-        $python_version scripts/create_vpc \$ARGS
+        $python_version scripts/create_vpc.py \$ARGS
         """)
     }
     publishers {
@@ -81,7 +81,7 @@ job("${job_folder}/network") {
         shell("""
         cp $jenkins_scripts scripts/scripts -r
         ARGS="stage=$stage tenant=$tenant region=$region profile=$profile"
-        $python_version scripts/create_network \$ARGS
+        $python_version scripts/create_network.py \$ARGS
         """)
     }
     publishers {
@@ -119,7 +119,7 @@ job("${job_folder}/domain") {
         shell("""
         cp $jenkins_scripts scripts/scripts -r
         ARGS="stage=$stage tenant=$tenant region=$region profile=$profile"
-        $python_version scripts/create_domain \$ARGS
+        $python_version scripts/create_domain.py \$ARGS
         """)
     }
     publishers {
