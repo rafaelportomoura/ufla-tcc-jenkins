@@ -14,10 +14,10 @@ String codecommit="https://git-codecommit.us-east-2.amazonaws.com/v1/repos"
 String default_branch = "origin/main"
 String jenkins_repo_path="/var/repositories/ufla-tcc-jenkins"
 String jenkins_scripts="${jenkins_repo_path}/scripts"
+String python_version="python3.10"
 // AWS CMDS
 String aws="aws --profile ${profile} --region ${region}"
 String deploy="${aws} cloudformation deploy --no-fail-on-empty-changeset --capabilities CAPABILITY_NAMED_IAM"
-
 folder(job_folder) {
     displayName(stack_stage)
 }
@@ -45,7 +45,7 @@ job("${job_folder}/infra") {
     steps {
         shell("""
         cp $jenkins_scripts \$SCRIPT_PATH/scripts -r
-        python3 \$ENTRYPOINT stage=$stage tenant=$tenant region=$region profile=$profile
+        $python_version \$ENTRYPOINT stage=$stage tenant=$tenant region=$region profile=$profile python=$python_version
         """)
     }
     publishers {
