@@ -24,10 +24,6 @@ folder(job_folder) {
 
 job("${job_folder}/infra") {
     disabled(env_disable_pipes)
-    parameters {
-        stringParam('SCRIPT_PATH', 'scripts', 'Script path')
-        stringParam('ENTRYPOINT', 'scripts/deploy.py', 'Entrypoint')
-    }
     scm {
         git {
             remote {
@@ -36,6 +32,7 @@ job("${job_folder}/infra") {
         }
     }
   wrappers {
+        colorizeOutput('xterm')
         preBuildCleanup {
             deleteDirectories()
             cleanupParameter('CLEANUP')
@@ -44,8 +41,8 @@ job("${job_folder}/infra") {
 
     steps {
         shell("""
-        cp $jenkins_scripts \$SCRIPT_PATH/scripts -r
-        $python_version \$ENTRYPOINT stage=$stage tenant=$tenant region=$region profile=$profile python=$python_version
+        cp $jenkins_scripts scripts/scripts -r
+        $python_version scripts/deploy.py stage=$stage tenant=$tenant region=$region profile=$profile python=$python_version
         """)
     }
     publishers {
