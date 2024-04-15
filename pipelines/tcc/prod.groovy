@@ -22,7 +22,7 @@ folder(job_folder) {
     displayName(stack_stage)
 }
 
-job("${job_folder}/infra") {
+job("${job_folder}/vpc") {
     disabled(env_disable_pipes)
     scm {
         git {
@@ -43,9 +43,81 @@ job("${job_folder}/infra") {
         shell("""
         cp $jenkins_scripts scripts/scripts -r
         ARGS="stage=$stage tenant=$tenant region=$region profile=$profile"
-        $python_version scripts/deploy.py $ARGS
         $python_version scripts/create_vpc $ARGS
+        """)
+    }
+    publishers {
+        cleanWs {
+            cleanWhenAborted(true)
+            cleanWhenFailure(true)
+            cleanWhenNotBuilt(false)
+            cleanWhenSuccess(true)
+            cleanWhenUnstable(true)
+            deleteDirs(true)
+            notFailBuild(true)
+            disableDeferredWipeout(true)
+        }
+    }
+}
+
+job("${job_folder}/network") {
+    disabled(env_disable_pipes)
+    scm {
+        git {
+            remote {
+                url("${codecommit}/ufla-tcc-infra")
+            }
+        }
+    }
+  wrappers {
+        colorizeOutput('xterm')
+        preBuildCleanup {
+            deleteDirectories()
+            cleanupParameter('CLEANUP')
+        }
+    }
+
+    steps {
+        shell("""
+        cp $jenkins_scripts scripts/scripts -r
+        ARGS="stage=$stage tenant=$tenant region=$region profile=$profile"
         $python_version scripts/create_network $ARGS
+        """)
+    }
+    publishers {
+        cleanWs {
+            cleanWhenAborted(true)
+            cleanWhenFailure(true)
+            cleanWhenNotBuilt(false)
+            cleanWhenSuccess(true)
+            cleanWhenUnstable(true)
+            deleteDirs(true)
+            notFailBuild(true)
+            disableDeferredWipeout(true)
+        }
+    }
+
+job("${job_folder}/domain") {
+    disabled(env_disable_pipes)
+    scm {
+        git {
+            remote {
+                url("${codecommit}/ufla-tcc-infra")
+            }
+        }
+    }
+  wrappers {
+        colorizeOutput('xterm')
+        preBuildCleanup {
+            deleteDirectories()
+            cleanupParameter('CLEANUP')
+        }
+    }
+
+    steps {
+        shell("""
+        cp $jenkins_scripts scripts/scripts -r
+        ARGS="stage=$stage tenant=$tenant region=$region profile=$profile"
         $python_version scripts/create_domain $ARGS
         """)
     }
