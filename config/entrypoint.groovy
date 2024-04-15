@@ -90,8 +90,8 @@ job('Config/git') {
     }
     steps {
         shell("""
-            cd $REPO_PATH
-            git checkout main
+            cd \$REPO_PATH
+            git checkout \$BRANCH
             git pull
         """)
     }
