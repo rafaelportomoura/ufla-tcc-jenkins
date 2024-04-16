@@ -24,7 +24,15 @@ stacks = cloudformation.list_final_status_stacks()["StackSummaries"]
 
 stacks = sorted(stacks, key=lambda x: x["CreationTime"], reverse=True)
 waiting_stacks = []
-for stack in stacks:
+for stack in filter(
+    lambda x: x["StackName"]
+    not in [
+        "Tcc-Jenkins-Deploy",
+        "Clone-Or-Update-Repository-Document-Deploy",
+        "Prod-Tcc-Domain-Deploy",
+    ],
+    stacks,
+):
     stack_name = stack["StackName"]
     cloudformation.delete_stack(stack_name)
     waiting_stacks.append(stack_name)

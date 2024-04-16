@@ -1,26 +1,30 @@
-folder('entrypoints') {
+
+String pipelines_path = 'pipelines/tcc'
+String codecommit="https://git-codecommit.us-east-2.amazonaws.com/v1/repos"
+String default_branch = "origin/main"
+String cron_expression = "H/05 * * * *"
+String entrypoint_folder ="entrypoints"
+String config_folder="config"
+
+folder(entrypoint_folder) {
     displayName('Entrypoints')
 }
-    
-job('entrypoints/entrypoint') {
+
+job("${entrypoint_folder}/prod") {
     scm {
         git {
             remote {
-                url('https://git-codecommit.us-east-2.amazonaws.com/v1/repos/ufla-tcc-jenkins')
+                url("${codecommit}/ufla-tcc-jenkins")
             }
-            branch('main')
+            branch(default_branch)
         }
     }
-    wrappers {
-        preBuildCleanup {
-            includePattern('**/target/**')
-            deleteDirectories()
-            cleanupParameter('CLEANUP')
-        }
+    triggers {
+        scm(cron_expression)
     }
     steps {
-        dsl{
-            external('pipelines/tcc/entrypoint.groovy')
+        dsl {
+            external("${pipelines_path}/prod.groovy")
             removeAction('DELETE')
             removeViewAction('DELETE')
         }
@@ -48,12 +52,14 @@ job('entrypoints/entrypoint') {
         }
     }
 }
-folder('Config') {
+
+
+folder(config_folder) {
     displayName('Config')
 }
     
 
-job('Config/nodejs') {
+job('${config_folder}/nodejs') {
     parameters{
         stringParam('NODE_VERSION', '20', 'Node version')
     }
@@ -68,7 +74,7 @@ job('Config/nodejs') {
     }
 }
 
-job('Config/git') {
+job('${config_folder}/git') {
     steps {
         shell("""
             git config --global credential.helper '!aws codecommit credential-helper \$@'
@@ -77,13 +83,13 @@ job('Config/git') {
     }
 }
 
-job('Config/git_pull') {
+job('${config_folder}/git_pull') {
     parameters{
         stringParam('REPO_PATH', '/var/repositories/ufla-tcc-jenkins')
         stringParam('BRANCH', 'main')
     }
     triggers{
-        cron('H/05 * * * *')
+        cron(cron_expression)
     }
     steps {
         shell("""
