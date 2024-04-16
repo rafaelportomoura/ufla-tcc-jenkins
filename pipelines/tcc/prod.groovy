@@ -25,6 +25,7 @@ folder(job_folder) {
 
 job("${job_folder}/vpc") {
     disabled(env_disable_pipes)
+    logRotator(30, 10, 30, 10)
     scm {
         git {
             remote {
@@ -39,7 +40,6 @@ job("${job_folder}/vpc") {
             cleanupParameter('CLEANUP')
         }
     }
-
     steps {
         shell("""
         cp $jenkins_scripts scripts/scripts -r
@@ -63,6 +63,7 @@ job("${job_folder}/vpc") {
 
 job("${job_folder}/network") {
     disabled(env_disable_pipes)
+    logRotator(30, 10, 30, 10)
     scm {
         git {
             remote {
@@ -77,7 +78,6 @@ job("${job_folder}/network") {
             cleanupParameter('CLEANUP')
         }
     }
-
     steps {
         shell("""
         cp $jenkins_scripts scripts/scripts -r
@@ -101,6 +101,7 @@ job("${job_folder}/network") {
 
 job("${job_folder}/domain") {
     disabled(env_disable_pipes)
+    logRotator(30, 10, 30, 10)
     scm {
         git {
             remote {
@@ -115,7 +116,6 @@ job("${job_folder}/domain") {
             cleanupParameter('CLEANUP')
         }
     }
-
     steps {
         shell("""
         cp $jenkins_scripts scripts/scripts -r
@@ -139,6 +139,7 @@ job("${job_folder}/domain") {
 
 job("${job_folder}/certificate") {
     disabled(env_disable_pipes)
+    logRotator(30, 10, 30, 10)
     scm {
         git {
             remote {
@@ -153,7 +154,6 @@ job("${job_folder}/certificate") {
             cleanupParameter('CLEANUP')
         }
     }
-
     steps {
         shell("""
         cp $jenkins_scripts scripts/scripts -r
@@ -175,5 +175,41 @@ job("${job_folder}/certificate") {
     }
 }
 
-
+job("${job_folder}/package-bucket") {
+    disabled(env_disable_pipes)
+    logRotator(30, 10, 30, 10)
+    scm {
+        git {
+            remote {
+                url("${codecommit}/ufla-tcc-infra")
+            }
+        }
+    }
+  wrappers {
+        colorizeOutput('xterm')
+        preBuildCleanup {
+            deleteDirectories()
+            cleanupParameter('CLEANUP')
+        }
+    }
+    steps {
+        shell("""
+        cp $jenkins_scripts scripts/scripts -r
+        ARGS="stage=$stage tenant=$tenant region=$region profile=$profile"
+        $python_version scripts/create_package_bucket.py \$ARGS
+        """)
+    }
+    publishers {
+        cleanWs {
+            cleanWhenAborted(true)
+            cleanWhenFailure(true)
+            cleanWhenNotBuilt(false)
+            cleanWhenSuccess(true)
+            cleanWhenUnstable(true)
+            deleteDirs(true)
+            notFailBuild(true)
+            disableDeferredWipeout(true)
+        }
+    }
+}
 
