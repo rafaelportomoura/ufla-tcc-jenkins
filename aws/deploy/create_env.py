@@ -80,6 +80,7 @@ def send_document_procedure():
     if status != "Success":
         log.error("\rFailed to send document, final status: ", status)
         exit(1)
+    log.info("✅ Document sent successfully")
 
 
 if send_document:
