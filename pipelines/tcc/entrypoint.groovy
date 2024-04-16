@@ -2,11 +2,7 @@ String pipelines_path = 'pipelines/tcc'
 String codecommit="https://git-codecommit.us-east-2.amazonaws.com/v1/repos"
 String default_branch = "*/main"
 String scm_cron = "H/05 * * * *"
-String entrypoint_folder ="entrypoints/tcc"
-
-folder('tcc') {
-    displayName('Tcc')
-}
+String entrypoint_folder ="entrypoints"
 
 job("${entrypoint_folder}/prod") {
     scm {

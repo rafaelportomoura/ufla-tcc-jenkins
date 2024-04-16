@@ -1,11 +1,8 @@
 folder('entrypoints') {
     displayName('Entrypoints')
 }
-folder('entrypoints/tcc') {
-    displayName('TCC')
-}
     
-job('entrypoints/tcc/entrypoint') {
+job('entrypoints/entrypoint') {
     scm {
         git {
             remote {
