@@ -7,4 +7,4 @@ make -j 2
 sudo make altinstall
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python3.10 get-pip.py
-sudo echo \"fim do script de python\" >>/var/chegou_ao_fim.txt
+echo \"fim do script de python\" >>$HOME/chegou_ao_fim.txt
