@@ -1,10 +1,4 @@
-import groovy.lang.GroovyShell;
-import groovy.lang.Binding;
-
-Binding binding = new Binding();
-GroovyShell shell = new GroovyShell(binding);
-
-def diretorioAtual = new File('.').parent
+def diretorioAtual = System.getenv('WORKSPACE')
 def infraScript = new GroovyShell().parse(new File("${diretorioAtual}/libs/infra.groovy"));
 def Infra = infraScript.getClassLoader().loadClass("Infra")
 // ACCOUNT PARAMETERS
