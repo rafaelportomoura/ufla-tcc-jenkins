@@ -1,3 +1,12 @@
+import groovy.lang.GroovyShell;
+import groovy.lang.Binding;
+
+Binding binding = new Binding();
+GroovyShell shell = new GroovyShell(binding);
+
+def diretorioAtual = new File(".").canonicalPath
+def infraScript = new GroovyShell().parse(new File("${diretorioAtual}/libs/infra.groovy"));
+def Infra = infraScript.getClassLoader().loadClass("Infra")
 // ACCOUNT PARAMETERS
 String profile="default"
 String region="us-east-2"

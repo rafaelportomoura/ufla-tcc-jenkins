@@ -1,4 +1,3 @@
-
 String pipelines_path = 'pipelines'
 String codecommit="https://git-codecommit.us-east-2.amazonaws.com/v1/repos"
 String default_branch = "origin/main"
@@ -24,7 +23,6 @@ job("${entrypoint_folder}/tcc-prod") {
     }
     steps {
         dsl {
-            additionalClasspath("${pipelines_path}/libs/*.groovy")
             external("${pipelines_path}/tcc/prod.groovy")
             removeAction('DELETE')
             removeViewAction('DELETE')
