@@ -4,7 +4,7 @@ import groovy.lang.Binding;
 Binding binding = new Binding();
 GroovyShell shell = new GroovyShell(binding);
 
-def diretorioAtual = new File(".").canonicalPath
+def diretorioAtual = new File(getClass().protectionDomain.codeSource.location.path).parent
 def infraScript = new GroovyShell().parse(new File("${diretorioAtual}/libs/infra.groovy"));
 def Infra = infraScript.getClassLoader().loadClass("Infra")
 // ACCOUNT PARAMETERS
