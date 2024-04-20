@@ -1,5 +1,5 @@
-def diretorioAtual = "workspace/entrypoints/tcc-prod"
-def infraScript = new GroovyShell().parse(new File("${diretorioAtual}/pipelines/libs/infra.groovy"));
+hudson.FilePath workspace = hudson.model.Executor.currentExecutor().getCurrentWorkspace()
+def infraScript = new GroovyShell().parse(new File("${workspace}/pipelines/libs/infra.groovy"));
 def Infra = infraScript.getClassLoader().loadClass("Infra")
 // ACCOUNT PARAMETERS
 String profile="default"
