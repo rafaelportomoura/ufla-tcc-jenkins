@@ -24,6 +24,7 @@ job("${entrypoint_folder}/tcc-prod") {
     }
     steps {
         dsl {
+            additionalClasspath("${pipelines_path}/libs/*.groovy")
             external("${pipelines_path}/tcc/prod.groovy")
             removeAction('DELETE')
             removeViewAction('DELETE')
