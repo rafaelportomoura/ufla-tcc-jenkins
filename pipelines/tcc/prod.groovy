@@ -1,4 +1,5 @@
 def diretorioAtual = System.getenv('WORKSPACE')
+println "diretorioAtual: ${diretorioAtual}"
 def infraScript = new GroovyShell().parse(new File("${diretorioAtual}/libs/infra.groovy"));
 def Infra = infraScript.getClassLoader().loadClass("Infra")
 // ACCOUNT PARAMETERS
