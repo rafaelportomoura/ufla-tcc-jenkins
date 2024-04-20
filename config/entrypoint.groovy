@@ -59,7 +59,7 @@ folder(config_folder) {
 }
     
 
-job('${config_folder}/nodejs') {
+job("${config_folder}/nodejs") {
     parameters{
         stringParam('NODE_VERSION', '20', 'Node version')
     }
@@ -74,7 +74,7 @@ job('${config_folder}/nodejs') {
     }
 }
 
-job('${config_folder}/git') {
+job("${config_folder}/git") {
     steps {
         shell("""
             git config --global credential.helper '!aws codecommit credential-helper \$@'
@@ -83,7 +83,7 @@ job('${config_folder}/git') {
     }
 }
 
-job('${config_folder}/git_pull') {
+job("${config_folder}/git_pull") {
     parameters{
         stringParam('REPO_PATH', '/var/repositories/ufla-tcc-jenkins')
         stringParam('BRANCH', 'main')
