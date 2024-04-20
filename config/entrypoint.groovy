@@ -1,5 +1,5 @@
 
-String pipelines_path = 'pipelines/tcc'
+String pipelines_path = 'pipelines'
 String codecommit="https://git-codecommit.us-east-2.amazonaws.com/v1/repos"
 String default_branch = "origin/main"
 String cron_expression = "H/05 * * * *"
@@ -24,7 +24,7 @@ job("${entrypoint_folder}/tcc-prod") {
     }
     steps {
         dsl {
-            external("${pipelines_path}/tcc-prod.groovy")
+            external("${pipelines_path}/tcc/prod.groovy")
             removeAction('DELETE')
             removeViewAction('DELETE')
         }
