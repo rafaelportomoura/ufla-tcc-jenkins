@@ -1,4 +1,4 @@
-def diretorioAtual = "workspace/entrypoints/tcc-prod/ufla-tcc-jenkins"
+def diretorioAtual = "workspace/entrypoints/tcc-prod"
 def infraScript = new GroovyShell().parse(new File("${diretorioAtual}/pipelines/libs/infra.groovy"));
 def Infra = infraScript.getClassLoader().loadClass("Infra")
 // ACCOUNT PARAMETERS
