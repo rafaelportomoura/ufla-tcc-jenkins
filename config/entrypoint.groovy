@@ -10,7 +10,7 @@ folder(entrypoint_folder) {
     displayName('Entrypoints')
 }
 
-job("${entrypoint_folder}/prod") {
+job("${entrypoint_folder}/tcc-prod") {
     scm {
         git {
             remote {
@@ -24,7 +24,7 @@ job("${entrypoint_folder}/prod") {
     }
     steps {
         dsl {
-            external("${pipelines_path}/prod.groovy")
+            external("${pipelines_path}/tcc-prod.groovy")
             removeAction('DELETE')
             removeViewAction('DELETE')
         }
