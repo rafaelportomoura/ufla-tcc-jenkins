@@ -1,6 +1,6 @@
 hudson.FilePath workspace = hudson.model.Executor.currentExecutor().getCurrentWorkspace()
-def infraScript = new GroovyShell().parse(new File("${workspace}/pipelines/libs/infra.groovy"));
-def Infra = infraScript.getClassLoader().loadClass("Infra")
+GroovyShell shell = new GroovyShell()
+def infra = shell.parse(new File("${workspace}/pipelines/libs/infra.groovy"));
 // ACCOUNT PARAMETERS
 String profile="default"
 String region="us-east-2"
@@ -26,8 +26,8 @@ folder(job_folder) {
     displayName(stack_stage)
 }
 
-Infra.job(this, job_folder, "vpc", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_version, "create_vpc.py")
-Infra.job(this, job_folder, "network", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_version, "create_network.py")
-Infra.job(this, job_folder, "domain", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_version, "create_domain.py")
-Infra.job(this, job_folder, "certificate", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_version, "create_certificate.py")
-Infra.job(this, job_folder, "package-bucket", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_version, "create_bucket.py")
+infra.Infra.job(this, job_folder, "vpc", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_version, "create_vpc.py")
+infra.Infra.job(this, job_folder, "network", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_version, "create_network.py")
+infra.Infra.job(this, job_folder, "domain", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_version, "create_domain.py")
+infra.Infra.job(this, job_folder, "certificate", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_version, "create_certificate.py")
+infra.Infra.job(this, job_folder, "package-bucket", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_version, "create_bucket.py")
