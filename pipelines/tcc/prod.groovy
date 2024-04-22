@@ -1,5 +1,8 @@
+System.getenv().each { key, value ->
+    println("${key} = ${value}")
+}
 String workspace = System.getenv('WORKSPACE')
-def modules = load("${workspace}/scripts/infra.groovy")
+def modules = load("${workspace}/pipelines/libs/infra.groovy")
 
 // ACCOUNT PARAMETERS
 String profile="default"
