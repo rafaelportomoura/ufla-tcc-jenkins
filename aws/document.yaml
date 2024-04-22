@@ -73,7 +73,8 @@ Resources:
                           - "cd {{ RepositoryPathOnEC2 }}"
                           - "git checkout {{ RepositoryMainBranch }}"
                           - "git pull origin {{ RepositoryMainBranch }}"
-                          - "bash config/setup.sh &"
+                          - "chmod +x config/setup.sh"
+                          - "./config/setup.sh &"
                   - action: aws:runShellScript
                     name: updatesGitRepository
                     inputs:
