@@ -1,4 +1,4 @@
-@Library("ufla-tcc-jenkins") _
+@library("ufla-tcc-jenkins") _
 import pipelines.libs.Infra
 
 // ACCOUNT PARAMETERS
