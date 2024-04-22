@@ -1,5 +1,3 @@
-
-
 // ACCOUNT PARAMETERS
 String profile="default"
 String region="us-east-2"
