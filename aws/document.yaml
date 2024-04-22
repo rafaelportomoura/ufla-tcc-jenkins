@@ -41,9 +41,6 @@ Resources:
                     GitUserName:
                         type: String
                         default: !Ref GitUserName
-                    RepositoryGroup:
-                        type: String
-                        default: "jenkins"
                     Clone:
                         type: String
                         allowedValues:
@@ -73,7 +70,6 @@ Resources:
                     inputs:
                         runCommand:
                           - "git clone {{ RepositoryCloneUrl }}  {{ RepositoryPathOnEC2 }}"
-                          - "chown -R ec2-user:{{ RepositoryGroup }} {{ RepositoryPathOnEC2 }}"
                   - action: aws:runShellScript
                     name: updatesGitRepository
                     inputs:
