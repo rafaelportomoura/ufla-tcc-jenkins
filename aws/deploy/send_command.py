@@ -1,6 +1,5 @@
 import os
 import sys
-
 import json
 
 
@@ -26,6 +25,8 @@ if __name__ == "__main__" and __file__ == os.path.abspath(sys.argv[0]):
     sys.path.append(dirname(dirname(dirname(abspath(__file__)))))
     from scripts.cloudformation import CloudFormation
     from scripts.log import Log
+    from document import get_document
+    from jenkins import get_jenkins_instance
 
     clone = sys.argv[1].lower() == "true" if len(sys.argv) > 1 else False
     tenant = sys.argv[2] if len(sys.argv) > 2 else "tcc"
@@ -36,8 +37,8 @@ if __name__ == "__main__" and __file__ == os.path.abspath(sys.argv[0]):
     cloudformation = CloudFormation(profile, region, log_level)
     log = Log(log_level)
     exports = cloudformation.list_exports()
-    document = cloudformation.get_export_value(exports, "jenkins-document")
-    jenkins = cloudformation.get_export_value(exports, f"{tenant}-jenkins-instance")
+    document = get_document(cloudformation)
+    jenkins = get_jenkins_instance(tenant=tenant, cloudformation=cloudformation)
 
     command = send_command(profile, region, jenkins, document, clone)
     with open(f"{dir_of_file}/command.output.json", "w") as f:
