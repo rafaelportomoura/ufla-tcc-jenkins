@@ -17,5 +17,5 @@ for lib_file in libs_files:
 with open(os.path.join(prod_dir, "prod.groovy"), "r") as f:
     output_file += f.read()
 
-with open(os.path.join(pipe_dir, "prod.groovy"), "w") as f:
+with open(os.path.join(prod_dir, "outputprod.groovy"), "w") as f:
     f.write(output_file)
