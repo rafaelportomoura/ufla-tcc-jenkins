@@ -1,3 +1,5 @@
+package pipelines.libs
+
 class Infra {
   static job(dslFactory, job_folder, name, disabled, git_url, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, script) {
     dslFactory.job("${job_folder}/${name}") {

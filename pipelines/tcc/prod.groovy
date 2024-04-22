@@ -1,7 +1,5 @@
-hudson.FilePath workspace = hudson.model.Executor.currentExecutor().getCurrentWorkspace()
-GroovyShell shell = new GroovyShell()
-def infra = shell.parse(new File("${workspace}/pipelines/libs/infra.groovy"));
-infra.run()
+import pipelines.libs.Infra
+
 // ACCOUNT PARAMETERS
 String profile="default"
 String region="us-east-2"
