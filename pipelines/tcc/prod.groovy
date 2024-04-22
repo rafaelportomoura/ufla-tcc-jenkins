@@ -1,4 +1,5 @@
-def modules = load("${env.WORKSPACE}/scripts/infra.groovy")
+String env = System.getenv('WORKSPACE')
+def modules = load("${workspace}/scripts/infra.groovy")
 
 // ACCOUNT PARAMETERS
 String profile="default"
