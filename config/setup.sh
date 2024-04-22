@@ -25,7 +25,9 @@ sudo systemctl start jenkins
 echo "JENKINS STARTED"
 git config --global --add safe.directory $repository
 sudo chmod 777 --recursive $repository/.git
-sudo chown -R jenkins:jenkins $repository
+sudo chown -R ec2-user:jenkins $repository
+sudo chmod g=+rwx $repository --recursive
+sudo usermod -aG ec2-user jenkins
 bash $(dirname $0)/python.sh &
 bash $(dirname $0)/secret.sh
 echo \"fim do script de setup\" >>$HOME/chegou_ao_fim.txt

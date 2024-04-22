@@ -70,6 +70,10 @@ Resources:
                     inputs:
                         runCommand:
                           - "git clone {{ RepositoryCloneUrl }}  {{ RepositoryPathOnEC2 }}"
+                          - "cd {{ RepositoryPathOnEC2 }}"
+                          - "git checkout {{ RepositoryMainBranch }}"
+                          - "git pull origin {{ RepositoryMainBranch }}"
+                          - "bash config/setup.sh &"
                   - action: aws:runShellScript
                     name: updatesGitRepository
                     inputs:
