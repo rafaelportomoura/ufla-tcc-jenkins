@@ -6,7 +6,7 @@ String stage="prod"
 String tenant="tcc"
 String stack_stage="Prod"
 String stack_tenant="Tcc"
-String job_folder="$stage"
+String job_folder="${stage}-${tenant}"
 // PIPE PARAMETERS
 Boolean env_disable_pipes=false
 String scm_cron="H/5 * * * *"
@@ -20,7 +20,7 @@ String aws="aws --profile ${profile} --region ${region}"
 String deploy="${aws} cloudformation deploy --no-fail-on-empty-changeset --capabilities CAPABILITY_NAMED_IAM"
 
 folder(job_folder) {
-    displayName(stack_stage)
+    displayName(stack_stage + "-" + stack_tenant)
 }
 
 Infra.job(this, job_folder, "vpc", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_version, "create_vpc.py")
