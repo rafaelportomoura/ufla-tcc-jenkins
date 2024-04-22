@@ -1,0 +1,2 @@
+https://github.com/jenkinsci/job-dsl-plugin/wiki/Job-DSL-Commands
+#https://github.com/jenkinsci/job-dsl-plugin/blob/master/docs/User-Power-Moves.md
