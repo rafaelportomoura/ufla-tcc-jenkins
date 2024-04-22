@@ -1,4 +1,5 @@
-import libs.Infra
+@Library("ufla-tcc-jenkins") _
+import pipelines.libs.Infra
 
 // ACCOUNT PARAMETERS
 String profile="default"
