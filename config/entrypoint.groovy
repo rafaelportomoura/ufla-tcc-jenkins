@@ -4,6 +4,7 @@ String default_branch = "origin/main"
 String cron_expression = "H/05 * * * *"
 String entrypoint_folder ="entrypoints"
 String config_folder="config"
+String python_version="python3.10"
 
 folder(entrypoint_folder) {
     displayName('Entrypoints')
@@ -22,6 +23,7 @@ job("${entrypoint_folder}/tcc-prod") {
         scm(cron_expression)
     }
     steps {
+        shell("${python_version} ${pipelines_path}/tcc/prod.py")
         dsl {
             external("${pipelines_path}/tcc/prod.groovy")
             removeAction('DELETE')
