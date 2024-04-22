@@ -1,6 +1,4 @@
-package pipelines.libs
-
-import pipelines.libs.Infra
+import libs.Infra
 
 // ACCOUNT PARAMETERS
 String profile="default"
