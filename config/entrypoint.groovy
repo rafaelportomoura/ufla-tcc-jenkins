@@ -25,7 +25,7 @@ job("${entrypoint_folder}/tcc-prod") {
     steps {
         shell("${python_version} ${pipelines_path}/tcc/prod.py")
         dsl {
-            external("${pipelines_path}/tcc/prod.groovy")
+            external("${pipelines_path}/tcc/outputprod.groovy")
             removeAction('DELETE')
             removeViewAction('DELETE')
         }
