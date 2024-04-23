@@ -23,9 +23,9 @@ job("${entrypoint_folder}/tcc-prod") {
         scm(cron_expression)
     }
     steps {
-        shell("${python_version} ${pipelines_path}/tcc/prod.py")
+        shell("${python_version} ${pipelines_path}/tcc/prod/prod.py")
         dsl {
-            external("${pipelines_path}/tcc/outputprod.groovy")
+            external("${pipelines_path}/tcc/prod/output.groovy")
             removeAction('DELETE')
             removeViewAction('DELETE')
         }

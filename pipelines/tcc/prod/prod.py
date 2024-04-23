@@ -14,12 +14,12 @@ for lib_file in libs_files:
             output_file += f.read()
             output_file += "\n"
 
-with open(os.path.join(prod_dir, "prodheader.groovy"), "r") as f:
+with open(os.path.join(prod_dir, "header.groovy"), "r") as f:
     output_file += f.read()
 output_file += "\n"
 
 with open(os.path.join(prod_dir, "prod.groovy"), "r") as f:
     output_file += f.read()
 
-with open(os.path.join(prod_dir, "outputprod.groovy"), "w") as f:
+with open(os.path.join(prod_dir, "output.groovy"), "w") as f:
     f.write(output_file)
