@@ -32,7 +32,7 @@ class Typescript:
         package_install = f"{self.package_manager} {self.package_manager_install}"
         dev_install = f"{package_install} {self.package_manager_dev_build_flags}"
         os.system(
-            f". ~/nvm/nvm.sh \
+            f". ~/.nvm/nvm.sh \
                   && nvm use {self.node_version} \
                   && {dev_install} \
                   && find ./node_modules -mtime +10950 -exec touch {{}} \
