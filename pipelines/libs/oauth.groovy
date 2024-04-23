@@ -1,5 +1,5 @@
 class OAuth {
-  static job(dslFactory, name, is_disabled, git_url, git_default_branch) {
+  static job(dslFactory, job_folder, name, is_disabled, git_url, git_default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, account_id) {
     dslFactory.job("${job_folder}/${name}") {
       disabled(is_disabled)
       logRotator(30, 10, 30, 10)
