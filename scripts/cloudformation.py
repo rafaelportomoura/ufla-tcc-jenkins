@@ -31,7 +31,7 @@ class CloudFormation:
     def package_and_deploy_stack(self, stack: Stack) -> None:
         self.log.checkpoint(f"Packaging {stack.stack_name}")
         output = self.package(stack["template"])
-        stack["template"] = output
+        stack.set_output_template(output)
         self.deploy_stack(stack)
 
     def deploy_stack(self, stack: Stack) -> None:
