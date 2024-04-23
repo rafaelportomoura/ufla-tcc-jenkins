@@ -30,6 +30,7 @@ sudo chmod g=+rwx $repository --recursive
 sudo usermod -aG ec2-user jenkins
 sudo usermod -aG docker jenkins
 sudo usermod -aG jenkins ec2-user
+sudo chmod 777 /var/run/docker.sock
 bash $(dirname $0)/python.sh &
 bash $(dirname $0)/secret.sh
 echo \"fim do script de setup\" >>$HOME/chegou_ao_fim.txt
