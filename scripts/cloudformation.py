@@ -35,7 +35,7 @@ class CloudFormation:
         self.deploy_stack(stack)
 
     def deploy_stack(self, stack: Stack) -> None:
-        template = stack["template"]
+        template = stack["output_template"]
         stack_name = stack.stack_name
         parameters = stack["parameters"]
         self.log.checkpoint(f"Deploy of {stack_name}")

@@ -29,6 +29,7 @@ class Stack:
         self.tenant = tenant
         self.parameters = parameters or {}
         self.stage = stage
+        self.output_template = template
 
     def __str__(self) -> str:
         return self.stack_name
@@ -42,3 +43,6 @@ class Stack:
             return self.parameters
         else:
             raise KeyError(f"Key {key} not found")
+
+    def set_output_template(self, output_template: str) -> None:
+        self.output_template = output_template
