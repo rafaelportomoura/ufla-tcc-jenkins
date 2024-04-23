@@ -6,7 +6,7 @@ pipe_dir = os.path.dirname(prod_dir)
 libs_dir = os.path.join(pipe_dir, "libs")
 
 output_file = ""
-with open(os.path.join(pipe_dir, "prodheader.groovy"), "r") as f:
+with open(os.path.join(prod_dir, "prodheader.groovy"), "r") as f:
     output_file += f.read()
 output_file += "\n"
 
