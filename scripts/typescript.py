@@ -7,12 +7,7 @@ class Typescript:
         node_version: int = 20,
         package_manager: str = "pnpm",
         package_manager_install: str = "install",
-        package_manager_dev_build_flags: list[str] = [
-            "--dev",
-            "--silent",
-            "--no-optional",
-            "--ignore-scripts",
-        ],
+        package_manager_dev_build_flags: list[str] = [],
         package_manager_prod_build_flags: list[str] = [
             "--prod",
             "--silent",
