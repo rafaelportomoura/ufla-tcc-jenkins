@@ -41,6 +41,8 @@ class Stack:
             return self.stack_name
         elif key == "parameters":
             return self.parameters
+        elif key == "output_template":
+            return self.output_template
         else:
             raise KeyError(f"Key {key} not found")
 
