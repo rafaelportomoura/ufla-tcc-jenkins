@@ -20,14 +20,14 @@ class Stack:
         self,
         template: str,
         stack_name: str,
-        parameters: dict[str, str | int | bool],
+        parameters: dict[str, str | int | bool] = None,
         tenant: str = None,
         stage: str = None,
     ) -> None:
         self.template = template
         self.stack_name = stack_name
         self.tenant = tenant
-        self.parameters = parameters
+        self.parameters = parameters or {}
         self.stage = stage
 
     def __str__(self) -> str:
