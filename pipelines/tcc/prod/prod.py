@@ -2,7 +2,8 @@ import os
 import sys
 
 prod_dir = os.path.dirname(__file__)
-pipe_dir = os.path.dirname(prod_dir)
+tcc_dir = os.path.dirname(prod_dir)
+pipe_dir = os.path.dirname(tcc_dir)
 libs_dir = os.path.join(pipe_dir, "libs")
 
 output_file = ""
