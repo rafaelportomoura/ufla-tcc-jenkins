@@ -15,7 +15,7 @@ class OAuth {
       scm {
         git {
           remote {
-            url("${git_url}/ufla-tcc-infra")
+            url("${git_url}/ufla-tcc-oauth")
           }
           branch(git_default_branch)
         }
