@@ -28,10 +28,13 @@ class CloudFormation:
         self.region = region
         self.sleep = Sleep(self.log)
 
-    def package_and_deploy_stack(self, stack: Stack) -> None:
-        self.log.checkpoint(f"Packaging {stack.stack_name}")
-        output = self.package(stack["template"])
+    def package_and_deploy_stack(
+        self, stack: Stack, output: str = "output.yaml"
+    ) -> None:
         stack.set_output_template(output)
+        self.log.checkpoint(f"Packaging {stack.stack_name}")
+        self.package(stack["template"], stack["output_template"])
+        self.log.info("\n")
         self.deploy_stack(stack)
 
     def deploy_stack(self, stack: Stack) -> None:
@@ -109,8 +112,7 @@ class CloudFormation:
         self.sleep.sleep(seconds=10, message=message, erase_len=len(message) + 30)
         return self.wait_stacks_delete(stacks, max_retries_seg - 10)
 
-    def package(self, template: str) -> str:
-        output = "output.yaml"
+    def package(self, template: str, output: str) -> str:
         bucket = f"package-bucket-{self.region}"
         cmd = self.__package(bucket, template, output)
         os.system(f"{cmd} > /dev/null")
