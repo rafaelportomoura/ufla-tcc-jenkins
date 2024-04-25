@@ -26,4 +26,4 @@ class ECS:
             if self.profile and self.profile != "default"
             else ""
         )
-        return f"aws  --profile {profile} --region {self.region} ecs {cmd}"
+        return f"aws --region {self.region} ecs {cmd}"
