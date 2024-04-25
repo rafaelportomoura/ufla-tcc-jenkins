@@ -111,7 +111,7 @@ class CloudFormation:
         if len(stacks) == 0:
             return "ALL_STACKS_DELETED"
         message = f"{{{{symbol}}}} Has {len(stacks)} in delete process"
-        self.sleep.sleep(seconds=10, message=message, erase_len=len(message) + 30)
+        self.sleep.sleep(seconds=60, message=message, erase_len=len(message) + 30)
         return self.wait_stacks_delete(stacks, max_retries_seg - 10)
 
     def package(self, template: str, output: str) -> str:
