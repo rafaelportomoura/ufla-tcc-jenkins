@@ -21,4 +21,9 @@ class ECS:
         return cmd
 
     def __prefix(self, cmd: str) -> str:
-        return f"aws  --profile {self.profile} --region {self.region} ecs {cmd}"
+        profile = (
+            f"--profile {self.profile}"
+            if self.profile and self.profile != "default"
+            else ""
+        )
+        return f"aws  --profile {profile} --region {self.region} ecs {cmd}"
