@@ -106,6 +106,8 @@ class CloudFormation:
                 msg_status = f"{stack}: {status}"
                 print(f"✅ {msg_status}")
                 stacks.remove(stack)
+            else:
+                self.delete_stack(stack_name=stack)
         if len(stacks) == 0:
             return "ALL_STACKS_DELETED"
         message = f"Has {len(stacks)} in delete process"
