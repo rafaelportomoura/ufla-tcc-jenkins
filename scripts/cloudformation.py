@@ -117,6 +117,7 @@ class CloudFormation:
     def package(self, template: str, output: str) -> str:
         bucket = f"package-bucket-{self.region}"
         cmd = self.__package(bucket, template, output)
+        self.log.cmd(cmd)
         os.system(f"{cmd} > /dev/null")
         return output
 
