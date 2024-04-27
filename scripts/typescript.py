@@ -30,7 +30,11 @@ class Typescript:
             f". ~/.nvm/nvm.sh \
                   && nvm use {self.node_version} \
                   && {dev_install} \
-                  && {self.package_manager} run {cmd} \
+                  && {self.package_manager} run {cmd}"
+        )
+        os.system(
+            f". ~/.nvm/nvm.sh \
+                  && nvm use {self.node_version} \
                   && rm -rf node_modules \
                   && {package_install} {self.package_manager_prod_build_flags}"
         )

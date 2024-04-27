@@ -21,7 +21,7 @@ log_level = int(sys.argv[9], base=10) if len(sys.argv) > 2 else 3
 vpc = "vpc-0826717742c251f0f"
 subnet = "subnet-0bc9e41ccc407a504"
 amiid = "ami-0900fe555666598a2"
-volume_size = 50
+volume_size = 4
 instance_type = "t2.medium"
 tenant = "tcc"
 region = "us-east-2"
