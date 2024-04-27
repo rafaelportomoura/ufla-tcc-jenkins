@@ -32,11 +32,19 @@ class Typescript:
                   && {dev_install} \
                   && {self.package_manager} run {cmd}"
         )
+        print(
+            "\n\n ============================== BUILDING PRODUCTION ==============================  \n\n"
+        )
+        print(f"{package_install} {self.package_manager_prod_build_flags}")
         os.system(
             f". ~/.nvm/nvm.sh \
                   && nvm use {self.node_version} \
                   && rm -rf node_modules \
+                  && echo '👍'\
                   && {package_install} {self.package_manager_prod_build_flags}"
+        )
+        print(
+            "=================================== BUILDED ===================================== \n\n"
         )
 
     def lint(self, cmd: str = "lint") -> None:
