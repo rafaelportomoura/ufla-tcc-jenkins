@@ -7,7 +7,11 @@ class Typescript:
         node_version: int = 20,
         package_manager: str = "pnpm",
         package_manager_install: str = "install",
-        package_manager_dev_build_flags: list[str] = [],
+        package_manager_dev_build_flags: list[str] = [
+            "--silent",
+            "--no-optional",
+            "--ignore-scripts",
+        ],
         package_manager_prod_build_flags: list[str] = [
             "--prod",
             "--silent",
@@ -33,9 +37,10 @@ class Typescript:
                   && {self.package_manager} run {cmd}"
         )
         print(
-            "\n\n ============================== BUILDING PRODUCTION ==============================  \n\n"
+            "\n\n ============================== BUILDING PRODUCTION ==============================  \n\n",
+            flush=True,
         )
-        print(f"{package_install} {self.package_manager_prod_build_flags}")
+        print(f"{package_install} {self.package_manager_prod_build_flags}", flush=True)
         os.system(
             f". ~/.nvm/nvm.sh \
                   && nvm use {self.node_version} \
@@ -44,7 +49,8 @@ class Typescript:
                   && {package_install} {self.package_manager_prod_build_flags}"
         )
         print(
-            "=================================== BUILDED ===================================== \n\n"
+            "=================================== BUILDED ===================================== \n\n",
+            flush=True,
         )
 
     def lint(self, cmd: str = "lint") -> None:
