@@ -46,7 +46,8 @@ class Typescript:
                   && nvm use {self.node_version} \
                   && rm -rf node_modules \
                   && echo '👍'\
-                  && {package_install} {self.package_manager_prod_build_flags}"
+                  && npm install -g yarn \
+                  && yarn install --ignore-engines --production=true "
         )
         print(
             "=================================== BUILDED ===================================== \n\n",
