@@ -129,9 +129,12 @@ Resources:
                     VolumeType: "io1"
                     Iops: 200
                     DeleteOnTermination: true
+                    VolumeSize: 4
+              - DeviceName: "/dev/xvda"
+                Ebs: 
+                    VolumeType: "gp2"
+                    DeleteOnTermination: true
                     VolumeSize: !Ref VolumeSize
-              - DeviceName: "/dev/sdk"
-                NoDevice: {}
             Tags:
               - Key: Service
                 Value: EC2
