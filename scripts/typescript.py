@@ -60,4 +60,8 @@ class Typescript:
         os.system(f"{self.package_manager} run {cmd}")
 
     def remove(self, package: str) -> None:
-        os.system(f"{self.package_manager} remove {package}")
+        os.system(
+            f". ~/.nvm/nvm.sh \
+                  && nvm use {self.node_version} \
+                  && {self.package_manager} remove {package}"
+        )
