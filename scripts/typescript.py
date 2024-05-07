@@ -40,7 +40,6 @@ class Typescript:
             "\n\n ============================== BUILDING PRODUCTION ==============================  \n\n",
             flush=True,
         )
-        print(f"{package_install} {self.package_manager_prod_build_flags}", flush=True)
         os.system(
             f". ~/.nvm/nvm.sh \
                   && nvm use {self.node_version} \
