@@ -58,3 +58,6 @@ class Typescript:
 
     def test(self, cmd: str = "test") -> None:
         os.system(f"{self.package_manager} run {cmd}")
+
+    def remove(self, package: str) -> None:
+        os.system(f"{self.package_manager} remove {package}")
