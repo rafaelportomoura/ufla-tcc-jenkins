@@ -11,7 +11,7 @@ class ECS:
     def force_new_deployment(self, cluster: str, service: str):
         cmd = self.__force_new_deployment(cluster, service)
         self.log.cmd(cmd)
-        os.system(cmd)
+        os.system(f"{cmd} > /dev/null")
 
     def __force_new_deployment(self, cluster: str, service: str):
         cmd = self.__prefix(
