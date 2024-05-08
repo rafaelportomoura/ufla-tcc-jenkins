@@ -18,7 +18,6 @@ region = sys.argv[2] if len(sys.argv) > 3 else "us-east-2"
 profile = sys.argv[3] if len(sys.argv) > 4 else "tcc"
 log_level = int(sys.argv[4], base=10) if len(sys.argv) > 4 else 3
 
-cloudformation = CloudFormation(profile, region, log_level)
 log = Log(log_level)
 
 
@@ -29,10 +28,11 @@ def remove_from_buckets():
         remove_from_bucket(bucket=bucket, log=log, profile=profile)
 
 
-def delete_stacks(stk: list, cf: CloudFormation) -> None:
-    stk = sorted(stk, key=lambda x: x["CreationTime"], reverse=True)
+def delete_stacks(cf: CloudFormation) -> None:
+    stacks = cf.list_final_status_stacks()["StackSummaries"]
+    stacks = sorted(stacks, key=lambda x: x["CreationTime"], reverse=True)
     waiting_stacks = []
-    for stack in stk:
+    for stack in stacks:
         stack_name = stack["StackName"]
         cf.delete_stack(stack_name)
         waiting_stacks.append(stack_name)
@@ -41,6 +41,10 @@ def delete_stacks(stk: list, cf: CloudFormation) -> None:
 
 
 remove_from_buckets()
-stacks = cloudformation.list_final_status_stacks()["StackSummaries"]
-delete_stacks(stacks, cloudformation)
+delete_stacks(CloudFormation(profile, region, log_level))
+if region == "us-east-1":
+    log.info("All stacks and buckets were deleted")
+    exit(0)
+log.info("Deleting stacks in us-east-1")
+delete_stacks(CloudFormation(profile, "us-east-1", log_level))
 log.info("All stacks and buckets were deleted")
