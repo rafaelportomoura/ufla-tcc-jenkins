@@ -46,7 +46,7 @@ class Typescript:
                   && rm -rf node_modules \
                   && echo '👍'\
                   && npm install -g yarn \
-                  && yarn install --ignore-engines --production=true "
+                  && yarn install --ignore-engines --production=true --silent"
         )
         print(
             "=================================== BUILDED ===================================== \n\n",
