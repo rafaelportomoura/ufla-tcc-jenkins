@@ -8,7 +8,7 @@ class Docker:
     ) -> None:
         profile = f"--profile {profile}" if profile and profile != "default" else ""
         os.system(
-            f"echo '🐋 Building image...' && docker build -t {ecr_uri}/{image}:{tag} . > /dev/null &&\
+            f"echo '🐋 Building image...' && docker build -t {ecr_uri}/{image}:{tag} . --quiet &&\
                 aws {profile} --region {region} ecr get-login-password | docker login --username AWS --password-stdin {ecr_uri} > /dev/null &&\
                 echo '🐋 Push image' && docker push {ecr_uri}/{image}:{tag} > /dev/null"
         )
