@@ -23,7 +23,7 @@ class Docker:
                 ]
             )
         )
-        self.log.info(f"🐋 Building image {full_image}")
+        self.log.info(f"🐋 Push image {full_image}")
         output = self.cli_read.cmd(f"docker push {full_image} --quiet")
         self.log.info(output)
 
