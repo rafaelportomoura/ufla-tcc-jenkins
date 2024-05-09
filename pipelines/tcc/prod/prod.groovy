@@ -10,7 +10,7 @@ Infra.job(this, job_folder, "package-bucket", env_disable_pipes, codecommit, def
 Infra.job(this, job_folder, "kms", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, "create_kms.py")
 Infra.job(this, job_folder, "document-db", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, "create_document_db.py")
 Infra.job(this, job_folder, "image-bucket", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, "create_image_bucket.py")
-Infra.job(this, job_folder, "RDS", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, "create_rds.py")
+Infra.job(this, job_folder, "rds", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, "create_rds.py")
 OAuth.job(this, job_folder, "oauth", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, account_id, scm_cron)
 Products.job(this, job_folder, "products", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, account_id, scm_cron)
 Stocks.job(this, job_folder, "stocks", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, account_id, scm_cron)
