@@ -127,7 +127,7 @@ class CloudFormation:
     def deploy(self, template: str, stack_name: str, parameters={}) -> None:
         cmd = self.__deploy(template, stack_name, parameters)
         self.log.cmd(cmd)
-        output = os.preDefinedCmd(cmd)
+        output = self.cli_read.preDefinedCmd(cmd)
         self.log.verbose(output)
 
     def describe(self, stack_name: str) -> dict[str, Any]:
