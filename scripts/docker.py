@@ -14,7 +14,8 @@ class Docker:
         profile = f"--profile {profile}" if profile and profile != "default" else ""
         full_image = f"{ecr_uri}/{image}:{tag}"
         self.log.info(f"🐋 Building image {full_image}")
-        self.cli_read.cmd(f"docker build -t {full_image} . --quiet")
+        output = self.cli_read.cmd(f"docker build -t {full_image} . --quiet")
+        self.log.info(output)
         self.cli_read.pre_defined_cmd(
             " | ".join(
                 [

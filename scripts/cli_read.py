@@ -8,7 +8,11 @@ class CliRead:
         args = re.findall(pattern, cmd)
         args = [arg.strip() for arg in args]
         process = subprocess.Popen(
-            args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            args,
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            executable="/bin/bash",
         )
         output, errors = process.communicate()
 
