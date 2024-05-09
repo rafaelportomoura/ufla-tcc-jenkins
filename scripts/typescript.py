@@ -42,7 +42,8 @@ class Typescript:
         self.log.info(output)
 
     def lambda_packages(
-        self, cmd="yarn install --ignore-engines --production=true --silent"
+        self,
+        cmd="npm i -g yarn && yarn install --ignore-engines --production=true --silent",
     ):
         self.log.info("📦 Install lambda packages")
         full_cmd = " && ".join([self.source_nvm, self.nvm_use, cmd])
