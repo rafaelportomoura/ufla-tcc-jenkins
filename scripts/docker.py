@@ -14,7 +14,7 @@ class Docker:
         profile = f"--profile {profile}" if profile and profile != "default" else ""
         full_image = f"{ecr_uri}/{image}:{tag}"
         self.log.info(f"🐋 Building image {full_image}")
-        os.system(f"docker build -t {full_image} . --quiet").read()
+        os.system(f"docker build -t {full_image} . --quiet")
         os.popen(
             " | ".join(
                 [
@@ -24,7 +24,7 @@ class Docker:
             )
         ).read()
         self.log.info(f"🐋 Push image {full_image}")
-        os.system(f"docker push {full_image} --quiet").read()
+        os.system(f"docker push {full_image} --quiet")
 
     def ecr_uri(self, account_id: str, region: str) -> str:
         return f"{account_id}.dkr.ecr.{region}.amazonaws.com"
