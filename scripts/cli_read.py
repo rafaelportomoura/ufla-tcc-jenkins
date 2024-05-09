@@ -1,15 +1,5 @@
 import subprocess
 import re
-import os
-import pwd
-import grp
-
-
-def demote():
-    uid = pwd.getpwnam("jenkins").pw_uid
-    gid = grp.getgrnam("jenkins").gr_gid
-    os.setgid(gid)
-    os.setuid(uid)
 
 
 class CliRead:
@@ -18,10 +8,7 @@ class CliRead:
         args = re.findall(pattern, cmd)
         args = [arg.strip() for arg in args]
         process = subprocess.Popen(
-            args,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            preexec_fn=demote,
+            args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
         output, errors = process.communicate()
 
