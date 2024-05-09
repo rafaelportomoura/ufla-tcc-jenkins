@@ -1,5 +1,3 @@
-import os
-import subprocess
 from scripts.log import Log
 from scripts.cli_read import CliRead
 
