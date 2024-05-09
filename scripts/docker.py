@@ -16,7 +16,7 @@ class Docker:
         self.log.info(f"🐋 Building image {full_image}")
         self.cli_read.cmd(f"docker build -t {full_image} . --quiet")
         self.cli_read.pre_defined_cmd(
-            "|".join(
+            " | ".join(
                 [
                     f"aws {profile} --region {region} ecr get-login-password",
                     f"docker login --username AWS --password-stdin {ecr_uri}",
