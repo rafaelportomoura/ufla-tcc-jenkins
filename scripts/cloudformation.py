@@ -52,7 +52,7 @@ class CloudFormation:
         self.log.checkpoint(f"Deleting {stack_name}")
         cmd = self.__delete_stack(stack_name)
         self.log.cmd(cmd)
-        self.cli_read.preDefinedCmd(f"{cmd} &> /dev/null")
+        os.system(f"{cmd} &> /dev/null")
 
     def get_stack_status(self, stack_name: str) -> str:
         stack = self.describe(stack_name)
@@ -127,7 +127,7 @@ class CloudFormation:
     def deploy(self, template: str, stack_name: str, parameters={}) -> None:
         cmd = self.__deploy(template, stack_name, parameters)
         self.log.cmd(cmd)
-        os.system(cmd)
+        os.preDefinedCmd(cmd)
         self.log.verbose(output)
 
     def describe(self, stack_name: str) -> dict[str, Any]:
