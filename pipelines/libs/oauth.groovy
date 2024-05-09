@@ -4,7 +4,7 @@ class OAuth {
       disabled(is_disabled)
       logRotator(30, 10, 30, 10)
       triggers{
-          cron(cron_expression)
+          scm(cron_expression)
       }
       scm {
         git {
@@ -45,7 +45,7 @@ class OAuth {
       disabled(is_disabled)
       logRotator(30, 10, 30, 10)
       triggers{
-          cron(cron_expression)
+          scm(cron_expression)
       }
       parameters{
           choiceParam('LogLevel',['debug', 'verbose', 'info', 'log', 'warn', 'error'], 'Select compute services log level')
@@ -97,7 +97,7 @@ class OAuth {
       disabled(is_disabled)
       logRotator(30, 10, 30, 10)
       triggers{
-          cron(cron_expression)
+          scm(cron_expression)
       }
       scm {
         git {
@@ -139,7 +139,7 @@ class OAuth {
       disabled(is_disabled)
       logRotator(30, 10, 30, 10)
       triggers{
-          cron(cron_expression)
+          scm(cron_expression)
       }
       parameters{
           choiceParam('LogLevel',['debug', 'verbose', 'info', 'log', 'warn', 'error'], 'Select compute services log level')
