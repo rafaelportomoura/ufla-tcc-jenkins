@@ -12,3 +12,4 @@ Infra.job(this, job_folder, "document-db", env_disable_pipes, codecommit, defaul
 Infra.job(this, job_folder, "image-bucket", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, "create_image_bucket.py")
 OAuth.job(this, job_folder, "oauth", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, account_id, scm_cron)
 Products.job(this, job_folder, "products", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, account_id, scm_cron)
+Stocks.job(this, job_folder, "stocks", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, account_id, scm_cron)
