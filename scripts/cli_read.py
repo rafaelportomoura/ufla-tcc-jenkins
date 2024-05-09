@@ -33,7 +33,7 @@ class CliRead:
         output, errors = process.communicate()
 
         if process.returncode != 0:
-            raise CliReadException(errors.decode("utf-8"))
+            raise CliReadException(errors)
 
         return output
 
