@@ -32,11 +32,11 @@ class Typescript:
             ]
         )
         self.log.cmd(full_cmd)
-        self.cli_read.cmds(full_cmd)
+        self.cli_read.pre_defined_cmd(full_cmd)
         self.log.info("🏗 Builded")
 
     def remove(self, package: str, cmd: str = "pnpm remove") -> None:
-        output = self.cli_read.cmds(
+        output = self.cli_read.pre_defined_cmd(
             "&&".join([self.source_nvm, self.nvm_use, cmd, package])
         )
         self.log.info(output)
@@ -47,5 +47,5 @@ class Typescript:
         self.log.info("📦 Install lambda packages")
         full_cmd = "&&".join([self.source_nvm, self.nvm_use, cmd])
         self.log.cmd(full_cmd)
-        self.cli_read.cmds(full_cmd)
+        self.cli_read.pre_defined_cmd(full_cmd)
         self.log.info("📦 Installed lambda packages")
