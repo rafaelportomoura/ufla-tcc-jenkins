@@ -23,6 +23,7 @@ log = Log(log_level)
 
 def remove_from_buckets():
     buckets = list_buckets(log, profile)
+    log.verbose("🗑", buckets)
 
     for bucket in buckets:
         remove_from_bucket(bucket=bucket, log=log, profile=profile)
