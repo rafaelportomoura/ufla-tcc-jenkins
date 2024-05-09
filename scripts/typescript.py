@@ -1,67 +1,41 @@
 import os
+import subprocess
+from scripts.log import Log
+from scripts.cli_read import CliRead
 
 
 class Typescript:
     def __init__(
-        self,
-        node_version: int = 20,
-        package_manager: str = "pnpm",
-        package_manager_install: str = "install",
-        package_manager_dev_build_flags: list[str] = [
-            "--silent",
-            "--no-optional",
-            "--ignore-scripts",
-        ],
-        package_manager_prod_build_flags: list[str] = [
-            "--prod",
-            "--silent",
-            "--no-optional",
-            "--ignore-scripts",
-        ],
+        self, node_version: int = 20, cli_read: CliRead = CliRead(), log_level=1
     ):
-        self.node_version = node_version
-        self.package_manager = package_manager
-        self.package_manager_install = package_manager_install
-        self.package_manager_dev_build_flags = " ".join(package_manager_dev_build_flags)
-        self.package_manager_prod_build_flags = " ".join(
-            package_manager_prod_build_flags
+        self.log = Log(log_level=log_level)
+        self.source_nvm = (
+            f". ~/.nvm/nvm.sh > /dev/null && nvm use {node_version} > /dev/null"
         )
+        self.cli_read = cli_read
 
-    def build(self, cmd: str = "build") -> None:
-        package_install = f"{self.package_manager} {self.package_manager_install}"
-        dev_install = f"{package_install} {self.package_manager_dev_build_flags}"
-        os.system(
-            f". ~/.nvm/nvm.sh \
-                  && nvm use {self.node_version} \
-                  && {dev_install} \
-                  && {self.package_manager} run {cmd}"
-        )
-        print(
-            "\n\n ============================== BUILDING PRODUCTION ==============================  \n\n",
-            flush=True,
-        )
-        os.system(
-            f". ~/.nvm/nvm.sh \
-                  && nvm use {self.node_version} \
-                  && rm -rf node_modules \
-                  && echo '👍'\
-                  && npm install -g yarn \
-                  && yarn install --ignore-engines --production=true --silent"
-        )
-        print(
-            "=================================== BUILDED ===================================== \n\n",
-            flush=True,
-        )
+    def build(
+        self,
+        dev_install="pnpm install --silent --no-optional --ignore-scripts",
+        cmd: str = "pnpm run build",
+        pre_build="echo ''",
+        post_build: str = "rm -rf node_modules",
+    ) -> None:
+        self.log.info("🏗 Building")
+        full_cmd = f"{self.source_nvm} && {dev_install} && {pre_build} && {cmd} && {post_build}"
+        self.log.cmd(full_cmd)
+        self.cli_read.cmd(full_cmd)
+        self.log.info("🏗 Builded")
 
-    def lint(self, cmd: str = "lint") -> None:
-        os.system(f"{self.package_manager} run {cmd}")
+    def remove(self, package: str, cmd: str = "pnpm remove") -> None:
+        output = self.cli_read.cmd(f"{self.source_nvm} && {cmd} && {package}")
+        self.log.info(output)
 
-    def test(self, cmd: str = "test") -> None:
-        os.system(f"{self.package_manager} run {cmd}")
-
-    def remove(self, package: str) -> None:
-        os.system(
-            f". ~/.nvm/nvm.sh \
-                  && nvm use {self.node_version} \
-                  && {self.package_manager} remove {package}"
-        )
+    def lambda_packages(
+        self, cmd="yarn install --ignore-engines --production=true --silent"
+    ):
+        self.log.info("📦 Install lambda packages")
+        full_cmd = f"{self.source_nvm} && {cmd}"
+        self.log.cmd(full_cmd)
+        self.cli_read.cmd(full_cmd)
+        self.log.info("📦 Installed lambda packages")
