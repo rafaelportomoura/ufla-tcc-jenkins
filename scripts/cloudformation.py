@@ -4,7 +4,6 @@ from typing import Any
 from scripts.sleep import Sleep
 from scripts.log import Log
 from scripts.stacks import Stack
-from scripts.cli_read import CliRead
 
 
 class CloudFormation:
@@ -23,14 +22,11 @@ class CloudFormation:
         "UPDATE_ROLLBACK_COMPLETE",
     ]
 
-    def __init__(
-        self, profile: str, region: str, log_level=1, cli_read: CliRead = CliRead()
-    ) -> None:
+    def __init__(self, profile: str, region: str, log_level=1) -> None:
         self.log = Log(log_level=log_level)
         self.profile = profile
         self.region = region
         self.sleep = Sleep(self.log)
-        self.cli_read = cli_read
 
     def package_and_deploy_stack(
         self, stack: Stack, output: str = "output.yaml"
@@ -65,7 +61,6 @@ class CloudFormation:
         return status in [
             "CREATE_COMPLETE",
             "UPDATE_COMPLETE",
-            "UPDATE_ROLLBACK_COMPLETE",
         ]
 
     def check_if_stack_is_deleted(self, stack_name: str) -> tuple[bool, str]:
@@ -122,14 +117,13 @@ class CloudFormation:
         bucket = f"package-bucket-{self.region}"
         cmd = self.__package(bucket, template, output)
         self.log.cmd(cmd)
-        self.cli_read.cmd(cmd)
+        os.system(cmd)
         return output
 
     def deploy(self, template: str, stack_name: str, parameters={}) -> None:
         cmd = self.__deploy(template, stack_name, parameters)
         self.log.cmd(cmd)
-        output = self.cli_read.cmd(cmd)
-        self.log.verbose(output)
+        os.system(cmd)
 
     def describe(self, stack_name: str) -> dict[str, Any]:
         cmd = self.__describe(stack_name)
