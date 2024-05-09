@@ -5,9 +5,9 @@ import pwd
 import grp
 
 
-def demote(user_name="jenkins", group_name="jenkins"):
-    uid = pwd.getpwnam(user_name).pw_uid
-    gid = grp.getgrnam(group_name).gr_gid
+def demote():
+    uid = pwd.getpwnam("jenkins").pw_uid
+    gid = grp.getgrnam("jenkins").gr_gid
     os.setgid(gid)
     os.setuid(uid)
 
@@ -21,7 +21,7 @@ class CliRead:
             args,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            preexec_fn=lambda: demote(),
+            preexec_fn=demote,
         )
         output, errors = process.communicate()
 
