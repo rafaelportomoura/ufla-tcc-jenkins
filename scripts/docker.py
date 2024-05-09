@@ -24,8 +24,8 @@ class Docker:
             )
         )
         self.log.info(f"🐋 Push image {full_image}")
-        output = self.cli_read.cmd(f"docker push {full_image} --quiet")
-        self.log.info(output)
+        output = self.cli_read.cmd(f"docker push {full_image}")
+        self.log.info(output.split("\n")[-1])
 
     def ecr_uri(self, account_id: str, region: str) -> str:
         return f"{account_id}.dkr.ecr.{region}.amazonaws.com"
