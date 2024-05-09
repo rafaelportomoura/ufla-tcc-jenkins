@@ -14,7 +14,9 @@ class Docker:
         profile = f"--profile {profile}" if profile and profile != "default" else ""
         full_image = f"{ecr_uri}/{image}:{tag}"
         self.log.info(f"🐋 Building image {full_image}")
-        output = self.cli_read.cmd(f"docker build -t {full_image} . --quiet")
+        output = self.cli_read.pre_defined_cmd(
+            f"docker build -t {full_image} . --quiet"
+        )
         self.log.info(output)
         self.cli_read.pre_defined_cmd(
             " | ".join(
@@ -25,7 +27,7 @@ class Docker:
             )
         )
         self.log.info(f"🐋 Push image {full_image}")
-        output = self.cli_read.cmd(f"docker push {full_image}")
+        output = self.cli_read.pre_defined_cmd(f"docker push {full_image}")
         self.log.info(output)
 
     def ecr_uri(self, account_id: str, region: str) -> str:
