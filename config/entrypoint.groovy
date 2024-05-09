@@ -89,6 +89,7 @@ job("${config_folder}/git_pull") {
         stringParam('REPO_PATH', '/var/repositories/ufla-tcc-jenkins')
         stringParam('BRANCH', 'main')
     }
+      logRotator(1, 5, 1, 5)
     triggers{
         cron(cron_expression)
     }
