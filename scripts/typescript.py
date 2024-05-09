@@ -1,5 +1,6 @@
 from scripts.log import Log
 from scripts.cli_read import CliRead
+import os
 
 
 class Typescript:
@@ -7,8 +8,9 @@ class Typescript:
         self, node_version: int = 20, cli_read: CliRead = CliRead(), log_level=1
     ):
         self.log = Log(log_level=log_level)
+        nvm_path = os.path.join(os.environ["HOME"], ".nvm", "nvm.sh")
         self.source_nvm = (
-            f". ~/.nvm/nvm.sh > /dev/null && nvm use {node_version} > /dev/null"
+            f". {nvm_path} > /dev/null && nvm use {node_version} > /dev/null"
         )
         self.cli_read = cli_read
 
