@@ -8,7 +8,7 @@ class Stocks {
       }
       parameters{
           choiceParam('LogLevel',['debug', 'verbose', 'info', 'log', 'warn', 'error'], 'Select compute services log level')
-          stringParam('MinContainer', '0', 'Minimum number of containers')
+          stringParam('MinContainer', '1', 'Minimum number of containers')
           stringParam('MaxContainer', '1', 'Maximum number of containers')
           stringParam('ScaleOutCooldown', '60', 'Cooldown time to scale out')
           stringParam('ScaleInCooldown', '60', 'Cooldown time to scale in')
