@@ -15,8 +15,12 @@ class Docker:
         full_image = f"{ecr_uri}/{image}:{tag}"
         self.log.info(f"🐋 Building image {full_image}")
         self.cli_read.cmd(f"docker build -t {full_image} . --quiet")
-        self.cli_read.cmd(
-            f"aws {profile} --region {region} ecr get-login-password | docker login --username AWS --password-stdin {ecr_uri} > /dev/null"
+        self.cli_read.cmds(
+            [
+                f"aws {profile} --region {region} ecr get-login-password",
+                "&&",
+                f"docker login --username AWS --password-stdin {ecr_uri}",
+            ]
         )
         self.log.info(f"🐋 Building image {full_image}")
         output = self.cli_read.cmd(f"docker push {full_image} --quiet")
