@@ -10,7 +10,7 @@ class Typescript:
         self.log = Log(log_level=log_level)
         nvm_path = os.path.join(os.environ["HOME"], ".nvm", "nvm.sh")
         self.source_nvm = (
-            f". {nvm_path} > /dev/null && nvm use {node_version} > /dev/null"
+            f"source {nvm_path} > /dev/null && nvm use {node_version} > /dev/null"
         )
         self.cli_read = cli_read
 
