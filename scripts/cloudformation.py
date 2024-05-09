@@ -37,8 +37,8 @@ class CloudFormation:
     ) -> None:
         stack.set_output_template(output)
         self.log.checkpoint(f"Packaging {stack.stack_name}")
-        self.package(stack["template"], stack["output_template"])
-        self.log.info("\n")
+        out = self.package(stack["template"], stack["output_template"])
+        self.log.info(out.split("\n")[-1])
         self.deploy_stack(stack)
 
     def deploy_stack(self, stack: Stack) -> None:
@@ -121,8 +121,8 @@ class CloudFormation:
         bucket = f"package-bucket-{self.region}"
         cmd = self.__package(bucket, template, output)
         self.log.cmd(cmd)
-        self.cli_read.pre_defined_cmd(cmd)
-        return output
+        out = self.cli_read.pre_defined_cmd(cmd)
+        return out
 
     def deploy(self, template: str, stack_name: str, parameters={}) -> None:
         cmd = self.__deploy(template, stack_name, parameters)
