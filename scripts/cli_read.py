@@ -7,7 +7,7 @@ class CliRead:
         pattern = r"""((?:[^\s"']|"[^"]*"|'[^']*')+)"""
         args = re.findall(pattern, cmd)
         args = [arg.strip("\"'") for arg in args]
-
+        print(args)
         process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output, errors = process.communicate()
 
