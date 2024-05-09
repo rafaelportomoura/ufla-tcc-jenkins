@@ -1,5 +1,15 @@
 import subprocess
 import re
+import os
+import pwd
+import grp
+
+
+def demote(user_name="jenkins", group_name="jenkins"):
+    uid = pwd.getpwnam(user_name).pw_uid
+    gid = grp.getgrnam(group_name).gr_gid
+    os.setgid(gid)
+    os.setuid(uid)
 
 
 class CliRead:
@@ -7,7 +17,12 @@ class CliRead:
         pattern = r"""((?:[^\s"']|"[^"]*"|'[^']*')+)"""
         args = re.findall(pattern, cmd)
         args = [arg.strip() for arg in args]
-        process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process = subprocess.Popen(
+            args,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            preexec_fn=lambda: demote(),
+        )
         output, errors = process.communicate()
 
         if process.returncode != 0:
