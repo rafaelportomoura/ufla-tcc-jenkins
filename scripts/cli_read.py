@@ -17,10 +17,14 @@ class CliRead:
 
         return output.decode("utf-8")
 
-    def cmds(self, cmds: list):
-        args = [arg.strip() for arg in cmds]
+    def preDefinedCmd(self, cmds: str):
         process = subprocess.Popen(
-            args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            cmds,
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            executable="/bin/bash",
+            text=True,
         )
         output, errors = process.communicate()
 

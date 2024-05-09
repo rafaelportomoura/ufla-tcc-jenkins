@@ -21,26 +21,23 @@ class Typescript:
         post_build: str = "rm -rf node_modules",
     ) -> None:
         self.log.info("🏗 Building")
-        full_cmd = [
-            self.source_nvm,
-            "&&",
-            self.nvm_use,
-            "&&",
-            pre_build,
-            "&&",
-            dev_install,
-            "&&",
-            cmd,
-            "&&",
-            post_build,
-        ]
+        full_cmd = "&&".join(
+            [
+                self.source_nvm,
+                self.nvm_use,
+                pre_build,
+                dev_install,
+                cmd,
+                post_build,
+            ]
+        )
         self.log.cmd(full_cmd)
         self.cli_read.cmds(full_cmd)
         self.log.info("🏗 Builded")
 
     def remove(self, package: str, cmd: str = "pnpm remove") -> None:
         output = self.cli_read.cmds(
-            [self.source_nvm, "&&", self.nvm_use, "&&", cmd, "&&", package]
+            "&&".join([self.source_nvm, self.nvm_use, cmd, package])
         )
         self.log.info(output)
 
@@ -48,7 +45,7 @@ class Typescript:
         self, cmd="yarn install --ignore-engines --production=true --silent"
     ):
         self.log.info("📦 Install lambda packages")
-        full_cmd = [self.source_nvm, "&&", self.nvm_use, "&&", cmd]
+        full_cmd = "&&".join([self.source_nvm, self.nvm_use, cmd])
         self.log.cmd(full_cmd)
         self.cli_read.cmds(full_cmd)
         self.log.info("📦 Installed lambda packages")
