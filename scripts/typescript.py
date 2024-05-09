@@ -25,8 +25,8 @@ class Typescript:
             [
                 self.source_nvm,
                 self.nvm_use,
-                pre_build,
                 dev_install,
+                pre_build,
                 cmd,
                 post_build,
             ]
