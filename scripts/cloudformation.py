@@ -121,13 +121,13 @@ class CloudFormation:
         bucket = f"package-bucket-{self.region}"
         cmd = self.__package(bucket, template, output)
         self.log.cmd(cmd)
-        self.cli_read.preDefinedCmd(cmd)
+        self.cli_read.pre_defined_cmd(cmd)
         return output
 
     def deploy(self, template: str, stack_name: str, parameters={}) -> None:
         cmd = self.__deploy(template, stack_name, parameters)
         self.log.cmd(cmd)
-        output = self.cli_read.preDefinedCmd(cmd)
+        output = self.cli_read.pre_defined_cmd(cmd)
         self.log.verbose(output)
 
     def describe(self, stack_name: str) -> dict[str, Any]:

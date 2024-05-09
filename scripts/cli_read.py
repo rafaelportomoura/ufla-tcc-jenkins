@@ -17,7 +17,7 @@ class CliRead:
 
         return output.decode("utf-8")
 
-    def preDefinedCmd(self, cmds: str):
+    def pre_defined_cmd(self, cmds: str):
         process = subprocess.Popen(
             cmds,
             shell=True,
@@ -31,7 +31,7 @@ class CliRead:
         if process.returncode != 0:
             raise CliReadException(errors.decode("utf-8"))
 
-        return output.decode("utf-8")
+        return output
 
 
 class CliReadException(Exception):
