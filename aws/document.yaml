@@ -73,10 +73,14 @@ Resources:
                           - "cd {{ RepositoryPathOnEC2 }}"
                           - "git checkout {{ RepositoryMainBranch }}"
                           - "git pull origin {{ RepositoryMainBranch }}"
-                          - "chmod +x config/setup.sh"
-                          - "./config/setup.sh &"
+                          - "sudo chmod +x config/setup.sh"
+                          - "config/setup.sh"
                   - action: aws:runShellScript
                     name: updatesGitRepository
+                    precondition:
+                        StringEquals:
+                          - "{{ Clone }}"
+                          - "False"
                     inputs:
                         runCommand:
                           - "cd {{ RepositoryPathOnEC2 }}"
