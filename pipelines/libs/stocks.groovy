@@ -8,7 +8,7 @@ class Stocks {
       }
       parameters{
           choiceParam('LogLevel',['debug', 'verbose', 'info', 'log', 'warn', 'error'], 'Select compute services log level')
-          choiceParam('CreateDatabase',['false', 'true'], 'Has to create the database at RDS Server?')
+          choiceParam('MigrateDatabase',['false', 'true'], 'Has to migrate the database at RDS Server?')
           stringParam('MinContainer', '1', 'Minimum number of containers')
           stringParam('MaxContainer', '1', 'Maximum number of containers')
           stringParam('ScaleOutCooldown', '60', 'Cooldown time to scale out')
@@ -36,7 +36,7 @@ class Stocks {
         ARGS="stage=$stage tenant=$tenant region=$region profile=$profile account_id=$account_id log_level_compute=\$LogLevel"
         ARGS="\$ARGS min_container=\$MinContainer max_container=\$MaxContainer"
         ARGS="\$ARGS scale_out_cooldown=\$ScaleOutCooldown scale_in_cooldown=\$ScaleInCooldown"
-        ARGS="\$ARGS cpu_utilization=\$CpuUtilization create_database=\$CreateDatabase"
+        ARGS="\$ARGS cpu_utilization=\$CpuUtilization migrate_database=\$MigrateDatabase"
         $python_exe deploy/create_ecs.py \$ARGS
         """)
       }
