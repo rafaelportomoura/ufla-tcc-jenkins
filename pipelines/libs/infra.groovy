@@ -2,7 +2,10 @@ class Infra {
   static job(dslFactory, job_folder, name, is_disabled, git_url, git_default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, script) {
     dslFactory.job("${job_folder}/${name}") {
       disabled(is_disabled)
-      logRotator(30, 10, 30, 10)
+      logRotator(1, 5, 1, 5)
+      triggers{
+          scm("H/30 * * * *")
+      }
       scm {
         git {
           remote {
