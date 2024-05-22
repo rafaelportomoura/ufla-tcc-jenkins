@@ -1,4 +1,4 @@
-class Stocks {
+class Orders {
   static job(dslFactory, job_folder, name, is_disabled, git_url, git_default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, account_id, cron_expression, log_levels) {
     dslFactory.job("${job_folder}/${name}-ecs") {
       disabled(is_disabled)
@@ -17,7 +17,7 @@ class Stocks {
       scm {
         git {
           remote {
-            url("${git_url}/ufla-tcc-stocks")
+            url("${git_url}/ufla-tcc-orders")
           }
           branch(git_default_branch)
         }
@@ -61,7 +61,7 @@ class Stocks {
       scm {
         git {
           remote {
-            url("${git_url}/ufla-tcc-stocks")
+            url("${git_url}/ufla-tcc-orders")
           }
           branch(git_default_branch)
         }
@@ -107,7 +107,7 @@ class Stocks {
       scm {
         git {
           remote {
-            url("${git_url}/ufla-tcc-stocks")
+            url("${git_url}/ufla-tcc-orders")
           }
           branch(git_default_branch)
         }
@@ -140,50 +140,6 @@ class Stocks {
         }
       }
     }
-  
-    dslFactory.job("${job_folder}/${name}-lambdas") {
-      disabled(is_disabled)
-      logRotator(30, 10, 30, 10)
-      triggers{
-          scm(cron_expression)
-      }
-      parameters{
-          choiceParam('LogLevel',log_levels, 'Select compute services log level')
-      }
-      scm {
-        git {
-          remote {
-            url("${git_url}/ufla-tcc-stocks")
-          }
-          branch(git_default_branch)
-        }
-      }
-      wrappers {
-        colorizeOutput('xterm')
-        preBuildCleanup {
-          deleteDirectories()
-          cleanupParameter('CLEANUP')
-        }
-      }
-      steps {
-        shell("""
-        cp $jenkins_scripts deploy/scripts -r
-        ARGS="stage=$stage tenant=$tenant region=$region profile=$profile log_level_compute=\$LogLevel"
-        $python_exe deploy/create_lambda.py \$ARGS
-        """)
-      }
-      publishers {
-        cleanWs {
-          cleanWhenAborted(true)
-          cleanWhenFailure(true)
-          cleanWhenNotBuilt(false)
-          cleanWhenSuccess(true)
-          cleanWhenUnstable(true)
-          deleteDirs(true)
-          notFailBuild(true)
-          disableDeferredWipeout(true)
-        }
-      }
-    }
+
   }
 }

@@ -1,13 +1,13 @@
 class Products {
-  static job(dslFactory, job_folder, name, is_disabled, git_url, git_default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, account_id, cron_expression) {
+  static job(dslFactory, job_folder, name, is_disabled, git_url, git_default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, account_id, cron_expression, log_levels) {
     dslFactory.job("${job_folder}/${name}-ecs") {
       disabled(is_disabled)
       logRotator(30, 10, 30, 10)
       triggers{
-          scm(cron_expression)
+          triggerInfo("${job_folder}/${name}-ecr,${job_folder}/${name}-network", BuildResult.SUCCESS)
       }
       parameters{
-          choiceParam('LogLevel',['debug', 'verbose', 'info', 'log', 'warn', 'error'], 'Select compute services log level')
+          choiceParam('LogLevel',log_levels, 'Select compute services log level')
           stringParam('MinContainer', '1', 'Minimum number of containers')
           stringParam('MaxContainer', '1', 'Maximum number of containers')
           stringParam('ScaleOutCooldown', '60', 'Cooldown time to scale out')
@@ -101,7 +101,7 @@ class Products {
           scm(cron_expression)
       }
       parameters{
-          choiceParam('LogLevel',['debug', 'verbose', 'info', 'log', 'warn', 'error'], 'Select compute services log level')
+          choiceParam('LogLevel',log_levels, 'Select compute services log level')
           stringParam('AuthorizerResultTtlInSeconds', '300', 'Authorizer result time to live in seconds')
       }
       scm {

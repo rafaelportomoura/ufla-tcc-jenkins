@@ -1,4 +1,4 @@
-class Stocks {
+class ContactBridge {
   static job(dslFactory, job_folder, name, is_disabled, git_url, git_default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, account_id, cron_expression, log_levels) {
     dslFactory.job("${job_folder}/${name}-ecs") {
       disabled(is_disabled)
@@ -13,11 +13,12 @@ class Stocks {
           stringParam('ScaleOutCooldown', '60', 'Cooldown time to scale out')
           stringParam('ScaleInCooldown', '60', 'Cooldown time to scale in')
           stringParam('CpuUtilization', '70', 'CPU utilization to scale out')
+          stringParam('DefaultEmail', 'rafael.moura1@estudante.ufla.br', 'The email identity used to send notifications')
       }
       scm {
         git {
           remote {
-            url("${git_url}/ufla-tcc-stocks")
+            url("${git_url}/ufla-tcc-contact-bridge")
           }
           branch(git_default_branch)
         }
@@ -35,7 +36,7 @@ class Stocks {
         ARGS="stage=$stage tenant=$tenant region=$region profile=$profile account_id=$account_id log_level_compute=\$LogLevel"
         ARGS="\$ARGS min_container=\$MinContainer max_container=\$MaxContainer"
         ARGS="\$ARGS scale_out_cooldown=\$ScaleOutCooldown scale_in_cooldown=\$ScaleInCooldown"
-        ARGS="\$ARGS cpu_utilization=\$CpuUtilization"
+        ARGS="\$ARGS cpu_utilization=\$CpuUtilization default_email=\$DefaultEmail"
         $python_exe deploy/create_ecs.py \$ARGS
         """)
       }
@@ -61,7 +62,7 @@ class Stocks {
       scm {
         git {
           remote {
-            url("${git_url}/ufla-tcc-stocks")
+            url("${git_url}/ufla-tcc-contact-bridge")
           }
           branch(git_default_branch)
         }
@@ -107,7 +108,7 @@ class Stocks {
       scm {
         git {
           remote {
-            url("${git_url}/ufla-tcc-stocks")
+            url("${git_url}/ufla-tcc-contact-bridge")
           }
           branch(git_default_branch)
         }
@@ -149,11 +150,12 @@ class Stocks {
       }
       parameters{
           choiceParam('LogLevel',log_levels, 'Select compute services log level')
+          stringParam('DefaultEmail', 'rafael.moura1@estudante.ufla.br', 'The email identity used to send notifications')
       }
       scm {
         git {
           remote {
-            url("${git_url}/ufla-tcc-stocks")
+            url("${git_url}/ufla-tcc-contact-bridge")
           }
           branch(git_default_branch)
         }
@@ -168,7 +170,7 @@ class Stocks {
       steps {
         shell("""
         cp $jenkins_scripts deploy/scripts -r
-        ARGS="stage=$stage tenant=$tenant region=$region profile=$profile log_level_compute=\$LogLevel"
+        ARGS="stage=$stage tenant=$tenant region=$region profile=$profile log_level_compute=\$LogLevel default_email=\$DefaultEmail"
         $python_exe deploy/create_lambda.py \$ARGS
         """)
       }
