@@ -1,6 +1,6 @@
 import os
 from scripts.log import Log
-from scripts.cloudformation import Cloudformation
+from scripts.cloudformation import CloudFormation
 from scripts.exception import NotFoundException
 
 
@@ -17,7 +17,7 @@ class ECS:
 
     def force_stack_new_deployment(
         self,
-        cloudformation: Cloudformation,
+        cloudformation: CloudFormation,
         stack_name: str,
         service_logical_id: str = "Service",
         cluster_logical_id: str = "Cluster",
