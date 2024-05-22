@@ -16,4 +16,4 @@ String default_branch = "origin/main"
 String jenkins_repo_path="/var/repositories/ufla-tcc-jenkins"
 String jenkins_scripts="${jenkins_repo_path}/scripts"
 String python_exe="python3.10"
-String[] log_levels = ['debug', 'verbose', 'info', 'log', 'warn', 'error']
+def log_levels = ['debug', 'verbose', 'info', 'log', 'warn', 'error'] as List
