@@ -33,6 +33,7 @@ class CliRead:
         output, errors = process.communicate()
 
         if process.returncode != 0:
+            print(output)
             raise CliReadException(errors)
 
         return output
