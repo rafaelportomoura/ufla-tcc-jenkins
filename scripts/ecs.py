@@ -16,20 +16,30 @@ class ECS:
         os.system(f"{cmd} > /dev/null")
 
     def force_stack_new_deployment(
-        self, cloudformation: Cloudformation, stack_name: str
+        self,
+        cloudformation: Cloudformation,
+        stack_name: str,
+        service_logical_id: str = "Service",
+        cluster_logical_id: str = "Cluster",
     ):
         if not cloudformation.stack_is_succesfully_deployed(stack_name=stack_name):
             return None
 
         stack_resources = cloudformation.describe_stack_resources(stack_name=stack_name)
-        service = [
-            x["PhysicalResourceId"] if x["LogicalResourceId"] == "Service" else None
-            for x in stack_resources["StackResources"]
-        ][0]
-        cluster = [
-            x["PhysicalResourceId"] if x["LogicalResourceId"] == "Cluster" else None
-            for x in stack_resources["StackResources"]
-        ][0]
+        service = None
+        cluster = None
+        count = 0
+        resources = stack_resources["StackResources"]
+        while (not service or not cluster) and count < len(resources):
+            resource = resources[count]
+            logical_id = resource["LogicalResourceId"]
+            physical_id = resource["PhysicalResourceId"]
+            if logical_id == service_logical_id:
+                service = physical_id
+            elif logical_id == cluster_logical_id:
+                cluster = physical_id
+            count += 1
+
         if not service:
             raise NotFoundException("Service not found")
         if not cluster:
