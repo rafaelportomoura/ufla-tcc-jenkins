@@ -48,8 +48,10 @@ class Infra {
       disabled(is_disabled)
       logRotator(1, 5, 1, 5)
       triggers{
-          upstream(after, "SUCCESS")
+        upstream(after, "SUCCESS")
+        scm('@daily')
       }
+      blockOnUpstreamProjects()
       scm {
         git {
           remote {

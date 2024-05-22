@@ -4,7 +4,10 @@ class Orders {
       disabled(is_disabled)
       logRotator(30, 10, 30, 10)
       triggers{
-          upstream("${job_folder}/${name}-ecr,${job_folder}/${name}-network", "SUCCESS")
+        upstream("${job_folder}/${name}-ecr,${job_folder}/${name}-network", "SUCCESS")
+        scm('@daily')
+      }
+      blockOnUpstreamProjects()
       }
       parameters{
           choiceParam('LogLevel',log_levels, 'Select compute services log level')
@@ -98,8 +101,10 @@ class Orders {
       disabled(is_disabled)
       logRotator(30, 10, 30, 10)
       triggers{
-          upstream(network_after, "SUCCESS")
+        upstream(network_after, "SUCCESS")
+        scm('@daily')
       }
+      blockOnUpstreamProjects()
       parameters{
           choiceParam('LogLevel',log_levels, 'Select compute services log level')
           stringParam('AuthorizerResultTtlInSeconds', '300', 'Authorizer result time to live in seconds')
