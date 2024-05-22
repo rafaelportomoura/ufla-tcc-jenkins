@@ -1,1 +1,0 @@
-aws --profile tcc --region us-east-2 kms encrypt --key-id 287c3852-825b-4453-bc62-ee1aa0e10bb5 --plaintext U2VuaGExMjM0NU1FVVBBVUVOVFJBTkRPTk9DVURBU01BUklBVEFCQU8/Lg== --encryption-algorithm RSAES_OAEP_SHA_256
