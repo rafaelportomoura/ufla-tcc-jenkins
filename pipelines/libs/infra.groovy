@@ -52,7 +52,6 @@ class Infra {
       logRotator(1, 5, 1, 5)
       triggers{
         upstream(after, "SUCCESS,UNSTABLE")
-        scm('@daily')
       }
       blockOnUpstreamProjects()
       properties {
