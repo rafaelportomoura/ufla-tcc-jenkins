@@ -8,6 +8,9 @@ class Stocks {
         scm('@daily')
       }
       blockOnUpstreamProjects()
+      properties {
+        priority(3)
+      }
       }
       parameters{
           choiceParam('LogLevel',log_levels, 'Select compute services log level')
@@ -61,6 +64,9 @@ class Stocks {
       triggers{
           scm(cron_expression)
       }
+      properties {
+        priority(1)
+      }
       scm {
         git {
           remote {
@@ -103,6 +109,9 @@ class Stocks {
       triggers{
         upstream(network_after, "SUCCESS")
         scm('@daily')
+      }
+      properties {
+        priority(2)
       }
       blockOnUpstreamProjects()
       parameters{
@@ -151,6 +160,9 @@ class Stocks {
       logRotator(30, 10, 30, 10)
       triggers{
           scm(cron_expression)
+      }
+      properties {
+        priority(1)
       }
       parameters{
           choiceParam('LogLevel',log_levels, 'Select compute services log level')
