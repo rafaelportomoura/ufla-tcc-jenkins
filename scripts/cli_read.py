@@ -33,13 +33,11 @@ class CliRead:
         output, errors = process.communicate()
 
         if process.returncode != 0:
-            print(output)
-            raise CliReadException(errors)
+            raise CliReadException("\n".join([output, errors]))
 
         return output
 
 
 class CliReadException(Exception):
     def __init__(self, error):
-        print(error)
         super().__init__(f"❌ {error}")
