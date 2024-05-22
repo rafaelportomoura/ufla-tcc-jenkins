@@ -7,7 +7,7 @@ def after_domain = "${job_folder}/domain"
 def after_domain_and_certificate = "${job_folder}/domain,${job_folder}/certificate"
 
 Infra.no_dependencies(this, job_folder, "vpc", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, "create_vpc.py")
-Infra.email(this, job_folder, "email_identity", env_disable_pipes, codecommit, default_branch, jenkins_scripts, region, profile, python_exe, "create_email_identity.py")
+Infra.email(this, job_folder, env_disable_pipes, codecommit, default_branch, jenkins_scripts, region, profile, python_exe, "create_email_identity.py")
 Infra.no_dependencies(this, job_folder, "package-bucket", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, "create_package_bucket.py")
 Infra.no_dependencies(this, job_folder, "domain", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, "create_domain.py")
 Infra.no_dependencies(this, job_folder, "kms", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, "create_kms.py")
