@@ -1,5 +1,5 @@
 class OAuth {
-  static job(dslFactory, job_folder, name, is_disabled, git_url, git_default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, account_id, cron_expression, log_levels) {
+  static job(dslFactory, job_folder, name, is_disabled, git_url, git_default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, account_id, cron_expression, log_levels, network_after) {
     dslFactory.job("${job_folder}/${name}-cognito") {
       disabled(is_disabled)
       logRotator(30, 10, 30, 10)
@@ -139,7 +139,7 @@ class OAuth {
       disabled(is_disabled)
       logRotator(30, 10, 30, 10)
       triggers{
-          upstream("${job_folder}/domain,${job_folder}/vpc,${job_folder}/network", "SUCCESS")
+          upstream(network_after, "SUCCESS")
       }
       parameters{
           choiceParam('LogLevel',log_levels, 'Select compute services log level')
