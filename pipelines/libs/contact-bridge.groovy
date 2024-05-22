@@ -11,7 +11,6 @@ class ContactBridge {
       properties {
         priority(12)
       }
-      }
       parameters{
           choiceParam('LogLevel',log_levels, 'Select compute services log level')
           stringParam('MinContainer', '1', 'Minimum number of containers')

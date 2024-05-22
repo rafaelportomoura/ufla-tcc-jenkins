@@ -9,8 +9,7 @@ class Stocks {
       }
       blockOnUpstreamProjects()
       properties {
-        priority(12)
-      }
+        priority(12
       }
       parameters{
           choiceParam('LogLevel',log_levels, 'Select compute services log level')
