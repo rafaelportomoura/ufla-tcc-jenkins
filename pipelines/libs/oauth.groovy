@@ -45,7 +45,7 @@ class OAuth {
       disabled(is_disabled)
       logRotator(30, 10, 30, 10)
       triggers{
-          triggerInfo("${job_folder}/${name}-ecr,${job_folder}/${name}-network", BuildResult.SUCCESS)
+          upstream("${job_folder}/${name}-ecr,${job_folder}/${name}-network", "SUCCESS")
       }
       parameters{
           choiceParam('LogLevel',log_levels, 'Select compute services log level')

@@ -48,7 +48,7 @@ class Infra {
       disabled(is_disabled)
       logRotator(1, 5, 1, 5)
       triggers{
-          triggerInfo("${job_folder}/vpc", BuildResult.SUCCESS)
+          upstream("${job_folder}/vpc", "SUCCESS")
       }
       scm {
         git {
@@ -92,7 +92,7 @@ class Infra {
       disabled(is_disabled)
       logRotator(1, 5, 1, 5)
       triggers{
-          triggerInfo("${job_folder}/domain", BuildResult.SUCCESS)
+          upstream("${job_folder}/domain", "SUCCESS")
       }
       scm {
         git {
