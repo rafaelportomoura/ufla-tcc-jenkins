@@ -51,7 +51,8 @@ class Infra {
       disabled(is_disabled)
       logRotator(1, 5, 1, 5)
       triggers{
-        upstream(after, "SUCCESS,UNSTABLE")
+        upstream(after, "SUCCESS")
+        upstream(after, "UNSTABLE")
       }
       blockOnUpstreamProjects()
       properties {

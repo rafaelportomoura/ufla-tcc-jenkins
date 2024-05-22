@@ -4,7 +4,8 @@ class Orders {
       disabled(is_disabled)
       logRotator(30, 10, 30, 10)
       triggers{
-        upstream("${job_folder}/${name}-ecr,${job_folder}/${name}-network", "SUCCESS,UNSTABLE")
+        upstream("${job_folder}/${name}-ecr,${job_folder}/${name}-network", "SUCCESS")
+        upstream("${job_folder}/${name}-ecr,${job_folder}/${name}-network", "UNSTABLE")
       }
       blockOnUpstreamProjects()
       properties {
@@ -105,7 +106,8 @@ class Orders {
       disabled(is_disabled)
       logRotator(30, 10, 30, 10)
       triggers{
-        upstream(network_after, "SUCCESS,UNSTABLE")
+        upstream(network_after, "SUCCESS")
+        upstream(network_after, "UNSTABLE")
       }
       properties {
         priority(11)

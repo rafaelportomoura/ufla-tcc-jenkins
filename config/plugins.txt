@@ -3,3 +3,4 @@ simple-build-for-pipeline
 simple-queue
 purge-build-queue-plugin
 job-dsl
+PrioritySorter
