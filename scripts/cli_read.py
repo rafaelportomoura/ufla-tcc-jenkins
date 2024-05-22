@@ -40,4 +40,5 @@ class CliRead:
 
 class CliReadException(Exception):
     def __init__(self, error):
+        print(error)
         super().__init__(f"❌ {error}")
