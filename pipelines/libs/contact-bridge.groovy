@@ -4,7 +4,7 @@ class ContactBridge {
       disabled(is_disabled)
       logRotator(30, 10, 30, 10)
       triggers{
-        upstream("${job_folder}/${name}-ecr,${job_folder}/${name}-network", "SUCCESS")
+        upstream("${job_folder}/${name}-ecr,${job_folder}/${name}-network", "SUCCESS,UNSTABLE")
         scm('@daily')
       }
       blockOnUpstreamProjects()
@@ -107,7 +107,7 @@ class ContactBridge {
       disabled(is_disabled)
       logRotator(30, 10, 30, 10)
       triggers{
-        upstream(network_after, "SUCCESS")
+        upstream(network_after, "SUCCESS,UNSTABLE")
         scm('@daily')
       }
       properties {
