@@ -17,7 +17,7 @@ Infra.after(this, job_folder, "document-db", env_disable_pipes, codecommit, defa
 Infra.after(this, job_folder, "image-bucket", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, "create_image_bucket.py", after_domain_and_certificate)
 Infra.after(this, job_folder, "rds", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, "create_rds.py", after_vpc)
 
-def network_after = "${job_folder}/vpc,${job_folder}/network,${job_folder}/domain,${job_folder}/certificate,${job_folder}/package-bucket,${job_folder}/kms,${job_folder}/document-db,${job_folder}/image-bucket,${job_folder}/rds"
+def network_after = "${job_folder}/vpc,${job_folder}/network,${job_folder}/domain,${job_folder}/certificate,${job_folder}/package-bucket"
 
 OAuth.job(this, job_folder, "oauth", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, account_id, scm_cron, log_levels, network_after)
 Products.job(this, job_folder, "products", env_disable_pipes, codecommit, default_branch, jenkins_scripts, stage, tenant, region, profile, python_exe, account_id, scm_cron, log_levels, network_after)
