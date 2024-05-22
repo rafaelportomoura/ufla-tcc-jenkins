@@ -7,7 +7,7 @@ class OAuth {
           scm(cron_expression)
       }
       properties {
-        priority(1)
+        priority(10)
       }
       scm {
         git {
@@ -53,7 +53,7 @@ class OAuth {
       }
       blockOnUpstreamProjects()
       properties {
-        priority(3)
+        priority(12)
       }
       parameters{
           choiceParam('LogLevel',log_levels, 'Select compute services log level')
@@ -108,7 +108,7 @@ class OAuth {
           scm(cron_expression)
       }
       properties {
-        priority(1)
+        priority(10)
       }
       scm {
         git {
@@ -154,7 +154,7 @@ class OAuth {
         scm('@daily')
       }
       properties {
-        priority(2)
+        priority(11)
       }
       blockOnUpstreamProjects()
       parameters{

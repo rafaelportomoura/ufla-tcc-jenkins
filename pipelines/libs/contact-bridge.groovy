@@ -9,7 +9,7 @@ class ContactBridge {
       }
       blockOnUpstreamProjects()
       properties {
-        priority(3)
+        priority(12)
       }
       }
       parameters{
@@ -66,7 +66,7 @@ class ContactBridge {
           scm(cron_expression)
       }
       properties {
-        priority(1)
+        priority(10)
       }
       scm {
         git {
@@ -112,7 +112,7 @@ class ContactBridge {
         scm('@daily')
       }
       properties {
-        priority(2)
+        priority(11)
       }
       blockOnUpstreamProjects()
       parameters{
@@ -163,7 +163,7 @@ class ContactBridge {
           scm(cron_expression)
       }
       properties {
-        priority(1)
+        priority(10)
       }
       parameters{
           choiceParam('LogLevel',log_levels, 'Select compute services log level')

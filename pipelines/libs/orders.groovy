@@ -9,7 +9,7 @@ class Orders {
       }
       blockOnUpstreamProjects()
       properties {
-        priority(3)
+        priority(12)
       }
       }
       parameters{
@@ -65,7 +65,7 @@ class Orders {
           scm(cron_expression)
       }
       properties {
-        priority(1)
+        priority(10)
       }
       scm {
         git {
@@ -111,7 +111,7 @@ class Orders {
         scm('@daily')
       }
       properties {
-        priority(2)
+        priority(11)
       }
       blockOnUpstreamProjects()
       parameters{

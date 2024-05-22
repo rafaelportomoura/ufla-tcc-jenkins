@@ -6,6 +6,9 @@ class Infra {
       triggers{
           scm("H/30 * * * *")
       }
+      properties {
+        priority(1)
+      }
       scm {
         git {
           remote {
@@ -52,6 +55,9 @@ class Infra {
         scm('@daily')
       }
       blockOnUpstreamProjects()
+      properties {
+        priority(2)
+      }
       scm {
         git {
           remote {
