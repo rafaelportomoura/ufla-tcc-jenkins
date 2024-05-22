@@ -70,7 +70,7 @@ job("${config_folder}/nodejs") {
             . \$HOME/.nvm/nvm.sh 
             nvm install \$NODE_VERSION 
             nvm use \$NODE_VERSION
-            npm install -g pnpm
+            npm install -g pnpm yarn
         """)
     }
 }
