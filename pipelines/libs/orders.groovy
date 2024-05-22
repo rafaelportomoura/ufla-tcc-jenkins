@@ -98,7 +98,7 @@ class Orders {
       disabled(is_disabled)
       logRotator(30, 10, 30, 10)
       triggers{
-          scm(cron_expression)
+          upstream("${job_folder}/domain,${job_folder}/vpc,${job_folder}/network", "SUCCESS")
       }
       parameters{
           choiceParam('LogLevel',log_levels, 'Select compute services log level')
