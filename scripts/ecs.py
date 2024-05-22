@@ -1,5 +1,7 @@
 import os
 from scripts.log import Log
+from scripts.cloudformation import Cloudformation
+from scripts.exception import NotFoundException
 
 
 class ECS:
@@ -12,6 +14,28 @@ class ECS:
         cmd = self.__force_new_deployment(cluster, service)
         self.log.cmd(cmd)
         os.system(f"{cmd} > /dev/null")
+
+    def force_stack_new_deployment(
+        self, cloudformation: Cloudformation, stack_name: str
+    ):
+        if not cloudformation.stack_is_succesfully_deployed(stack_name=stack_name):
+            return None
+
+        stack_resources = cloudformation.describe_stack_resources(stack_name=stack_name)
+        service = [
+            x["PhysicalResourceId"] if x["LogicalResourceId"] == "Service" else None
+            for x in stack_resources["StackResources"]
+        ][0]
+        cluster = [
+            x["PhysicalResourceId"] if x["LogicalResourceId"] == "Cluster" else None
+            for x in stack_resources["StackResources"]
+        ][0]
+        if not service:
+            raise NotFoundException("Service not found")
+        if not cluster:
+            raise NotFoundException("Cluster not found")
+
+        self.force_new_deployment(cluster=cluster, service=service)
 
     def __force_new_deployment(self, cluster: str, service: str):
         cmd = self.__prefix(
