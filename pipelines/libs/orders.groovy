@@ -152,7 +152,53 @@ class Orders {
           disableDeferredWipeout(true)
         }
       }
+    }  
+    dslFactory.job("${job_folder}/${name}-email") {
+      disabled(is_disabled)
+      logRotator(30, 10, 30, 10)
+      triggers{
+          scm(cron_expression)
+      }
+      properties {
+        priority(10)
+      }
+      parameters{
+          choiceParam('LogLevel',log_levels, 'Select compute services log level')
+      }
+      scm {
+        git {
+          remote {
+            url("${git_url}/ufla-tcc-contact-bridge")
+          }
+          branch(git_default_branch)
+        }
+      }
+      wrappers {
+        colorizeOutput('xterm')
+        preBuildCleanup {
+          deleteDirectories()
+          cleanupParameter('CLEANUP')
+        }
+      }
+      steps {
+        shell("""
+        cp $jenkins_scripts deploy/scripts -r
+        ARGS="stage=$stage tenant=$tenant region=$region profile=$profile log_level_compute=\$LogLevel"
+        $python_exe deploy/create_email.py \$ARGS
+        """)
+      }
+      publishers {
+        cleanWs {
+          cleanWhenAborted(true)
+          cleanWhenFailure(true)
+          cleanWhenNotBuilt(false)
+          cleanWhenSuccess(true)
+          cleanWhenUnstable(true)
+          deleteDirs(true)
+          notFailBuild(true)
+          disableDeferredWipeout(true)
+        }
+      }
     }
-
   }
 }
