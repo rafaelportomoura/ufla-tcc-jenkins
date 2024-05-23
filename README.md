@@ -1,4 +1,4 @@
-# :newspaper: OAuth
+# :newspaper: Jenkis
 
 Este repositório contém o código do microsserviço *Jenkins* do projeto [`CompraVirtual`][compravirtual].  
 O microsserviço é responsável pelo continuos deployment e para cumprir essa responsabilidade, o mesmo possui as seguintes funcionalidades:
@@ -20,6 +20,8 @@ O microsserviço é responsável pelo continuos deployment e para cumprir essa r
 
 - [AWS Systems Manager (SSM)][system-manager]: é uma solução de gerenciamento para recursos na AWS e em ambientes de várias nuvens e híbridos.
 
+- [AWS CodeCommit][codecommit] é um serviço de controle de código-fonte que hospeda repositórios privados do Git.
+
 ## :scroll: Autores
 
  | [<img src="https://github.com/rafaelportomoura.png" width=115><br><sub>Rafael Moura</sub>](https://github.com/rafaelportomoura) <br><sub>Aluno de Graduação</sub>| [<img src="https://github.com/rterrabh.png" width=115><br><sub>Ricardo Terra</sub>](https://github.com/rterrabh) <br><sub>Orientador</sub>|
@@ -38,3 +40,4 @@ LINKS
 [jenkins]: https://www.jenkins.io/
 [system-manager]: https://aws.amazon.com/systems-manager
 [dsl]: https://github.com/jenkinsci/job-dsl-plugin
+[codecommit]: https://aws.amazon.com/pt/codecommit/
