@@ -168,7 +168,7 @@ class Orders {
       scm {
         git {
           remote {
-            url("${git_url}/ufla-tcc-contact-bridge")
+            url("${git_url}/ufla-tcc-orders")
           }
           branch(git_default_branch)
         }
